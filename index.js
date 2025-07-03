@@ -1,0 +1,821 @@
+//Tabs and windowDom Manipulation
+
+let tabCount = 1;
+let closedTab = 1;
+
+function addTab(e) {
+  e.stopPropagation();
+  if(tabCount == closedTab){ tabCount = 1; closedTab = 1;}
+  const tab = document.createElement('div');
+  tab.className = 'tab';
+  tab.id = 'tab'+ tabCount;
+  tab.innerHTML = `Floor ${tabCount}<div class="close-tab" onclick="closeTab(event,'tab${tabCount}')";>+</div>`;
+  tab.onclick = () => updateTab(`${tab.id}`);
+  
+  document.getElementById('tabRow').appendChild(tab);
+  tabCount++;
+  addWindow(tab.id);
+}
+
+
+function closeTab(e,tabId){
+   e.stopPropagation();
+   removeWindow(tabId+'-window');
+   if(document.getElementById(tabId).classList.contains('active-tab')){ updateTab('ground-floor')
+}
+   document.getElementById('tabRow').removeChild(document.getElementById(tabId));
+   closedTab++;
+}
+
+// update tab switch
+function updateTab(id){
+    Array.from(document.getElementsByClassName('tab')).forEach((e)=>{
+        e.classList.remove('active-tab');
+    })
+    document.getElementById(id).classList.add('active-tab');
+    updateWindow(id+'-window')
+}
+
+function addWindow(id){
+    const window = document.createElement('div');
+    window.id = id+'-window';
+    window.className = 'window';
+    window.innerHTML = `${window.id}`;
+    
+    document.getElementById('window-container').appendChild(window);
+    updateWindow(window.id);
+    updateTab(id)
+}
+
+function updateWindow(id){
+    console.log(id)
+    Array.from(document.getElementsByClassName('window')).forEach((e)=>{
+         e.classList.remove('active-window')
+    })
+
+    document.getElementById(id).classList.add('active-window')
+}
+
+function removeWindow(id){
+    document.getElementById('window-container').removeChild(document.getElementById(id));
+}
+
+function handleDisable(dropId,input1,input2){
+                let dropDownBox = document.getElementById(dropId);
+                let inputBox1Value = document.getElementById(input1).value;
+                let inputBox2Value = document.getElementById(input2).value;
+    
+                if(inputBox1Value && inputBox2Value){
+                 dropDownBox.disabled = false;
+                }else{
+                dropDownBox.disabled = true;
+                }
+}
+
+ function checkInvalidData(data){
+          if(data == '' || data < 0 || data == NaN) return true;
+          else return false;
+}
+
+// (function(){
+//   let allInputs = document.getElementsByClassName('input-box');
+//   Array.from(allInputs).forEach((e)=>{
+//     e.value = 1
+//   })
+// })();
+
+function calculateArea(height,width){
+        return height*width;
+}
+
+
+function collectDataGf() {
+
+    let gfeWallsDimensionsList = document.getElementsByClassName('gfeWallsDimensions');
+    let gfeWallsDimensions = [];
+
+    for (let e of gfeWallsDimensionsList) {
+        let inputs = e.getElementsByTagName('input');
+        let length = inputs[0].value;
+        let height = inputs[1].value;
+
+        if (checkInvalidData(length) || checkInvalidData(height)) {
+            document.getElementById('errorBoxExternalWall').innerText = `Please fill valid data for: ${e.innerText}`;
+            return;
+        }
+    }
+
+    for (let e of gfeWallsDimensionsList) {
+        let inputs = e.getElementsByTagName('input');
+        gfeWallsDimensions.push({
+            length: parseFloat(inputs[0].value) || 0,
+            height: parseFloat(inputs[1].value) || 0
+        });
+    }
+    document.getElementById('errorBoxExternalWall').innerText = '';
+
+    let gfeGatesDimensionsList = document.getElementsByClassName('gfeGatesDimensions');
+    let gfeGatesDimensions = [];
+
+    for (let e of gfeGatesDimensionsList) {
+        let inputs = e.getElementsByTagName('input');
+        let width = inputs[0].value;
+        let height = inputs[1].value;
+        let nos = inputs[2].value;
+
+        if (checkInvalidData(width) || checkInvalidData(height) || checkInvalidData(nos)) {
+            document.getElementById('errorBoxExternalWall').innerText = `Please fill valid data for: ${e.innerText}`;
+            return;
+        }
+    }
+
+    for (let e of gfeGatesDimensionsList) {
+        let inputs = e.getElementsByTagName('input');
+        gfeGatesDimensions.push({
+            width: parseFloat(inputs[0].value) || 0,
+            height: parseFloat(inputs[1].value) || 0,
+            nos: parseFloat(inputs[2].value) || 0
+        });
+    }
+    document.getElementById('errorBoxExternalWall').innerText = '';
+
+    let gfeWindowsDimensionsList = document.getElementsByClassName('gfeWindowsDimensions');
+    let gfeWindowsDimensions = [];
+
+    for (let e of gfeWindowsDimensionsList) {
+        let inputs = e.getElementsByTagName('input');
+        let width = inputs[0].value;
+        let height = inputs[1].value;
+        let nos = inputs[2].value;
+
+        if (checkInvalidData(width) || checkInvalidData(height) || checkInvalidData(nos)) {
+            document.getElementById('errorBoxExternalWall').innerText = `Please fill valid data for: ${e.innerText}`;
+            return;
+        }
+    }
+
+    for (let e of gfeWindowsDimensionsList) {
+        let inputs = e.getElementsByTagName('input');
+        gfeWindowsDimensions.push({
+            width: parseFloat(inputs[0].value) || 0,
+            height: parseFloat(inputs[1].value) || 0,
+            nos: parseFloat(inputs[2].value) || 0
+        });
+    }
+    document.getElementById('errorBoxExternalWall').innerText = '';
+
+    let gfeVentDimensionsList = document.getElementsByClassName('gfeVentDimensions');
+    let gfeVentDimensions = [];
+
+    for (let e of gfeVentDimensionsList) {
+        let inputs = e.getElementsByTagName('input');
+        let width = inputs[0].value;
+        let height = inputs[1].value;
+        let nos = inputs[2].value;
+
+        if (checkInvalidData(width) || checkInvalidData(height) || checkInvalidData(nos)) {
+            document.getElementById('errorBoxExternalWall').innerText = `Please fill valid data for: ${e.innerText}`;
+            return;
+        }
+    }
+
+    for (let e of gfeVentDimensionsList) {
+        let inputs = e.getElementsByTagName('input');
+        gfeVentDimensions.push({
+            width: parseFloat(inputs[0].value) || 0,
+            height: parseFloat(inputs[1].value) || 0,
+            nos: parseFloat(inputs[2].value) || 0
+        });
+    }
+    document.getElementById('errorBoxExternalWall').innerText = '';
+
+    let gfePanelInputs = document.getElementById('gfePanelArea').getElementsByTagName('input');
+    let gfePanelAreaValue = gfePanelInputs[0] ? gfePanelInputs[0].value : '';
+
+    if (checkInvalidData(gfePanelAreaValue)) {
+        document.getElementById('errorBoxExternalWall').innerText = 'Invalid Panel Area in External Wall section';
+        return;
+    }
+    document.getElementById('errorBoxExternalWall').innerText = '';
+    let gfePanelArea = parseFloat(gfePanelAreaValue) || 0;
+
+
+    let externalWallData = {
+        wallData: gfeWallsDimensions,
+        gatesData: gfeGatesDimensions,
+        windowsData: gfeWindowsDimensions,
+        ventData: gfeVentDimensions,
+        panelArea: gfePanelArea
+    };
+
+    let gfiWallsDimensionsList = document.getElementsByClassName('gfiWallsDimensions');
+    let gfiWallsDimensions = [];
+
+    for (let e of gfiWallsDimensionsList) {
+        let inputs = e.getElementsByTagName('input');
+        let length = inputs[0].value;
+        let height = inputs[1].value;
+
+        if (checkInvalidData(length) || checkInvalidData(height)) {
+            document.getElementById('errorBoxInternalWall').innerText = `Please fill valid data for: ${e.innerText}`;
+            return;
+        }
+    }
+
+    for (let e of gfiWallsDimensionsList) {
+        let inputs = e.getElementsByTagName('input');
+        gfiWallsDimensions.push({
+            length: parseFloat(inputs[0].value) || 0,
+            height: parseFloat(inputs[1].value) || 0
+        });
+    }
+    document.getElementById('errorBoxInternalWall').innerText = '';
+
+    let gfiGatesDimensionsList = document.getElementsByClassName('gfiGatesDimensions');
+    let gfiGatesDimensions = [];
+
+    for (let e of gfiGatesDimensionsList) {
+        let inputs = e.getElementsByTagName('input');
+        let width = inputs[0].value;
+        let height = inputs[1].value;
+        let nos = inputs[2].value;
+
+        if (checkInvalidData(width) || checkInvalidData(height) || checkInvalidData(nos)) {
+            document.getElementById('errorBoxInternalWall').innerText = `Please fill valid data for: ${e.innerText}`;
+            return;
+        }
+    }
+
+    for (let e of gfiGatesDimensionsList) {
+        let inputs = e.getElementsByTagName('input');
+        gfiGatesDimensions.push({
+            width: parseFloat(inputs[0].value) || 0,
+            height: parseFloat(inputs[1].value) || 0,
+            nos: parseFloat(inputs[2].value) || 0
+        });
+    }
+    document.getElementById('errorBoxInternalWall').innerText = '';
+
+    let gfiWindowsDimensionsList = document.getElementsByClassName('gfiWindowsDimensions');
+    let gfiWindowsDimensions = [];
+
+    for (let e of gfiWindowsDimensionsList) {
+        let inputs = e.getElementsByTagName('input');
+        let width = inputs[0].value;
+        let height = inputs[1].value;
+        let nos = inputs[2].value;
+
+        if (checkInvalidData(width) || checkInvalidData(height) || checkInvalidData(nos)) {
+            document.getElementById('errorBoxInternalWall').innerText = `Please fill valid data for: ${e.innerText}`;
+            return;
+        }
+    }
+
+    for (let e of gfiWindowsDimensionsList) {
+        let inputs = e.getElementsByTagName('input');
+        gfiWindowsDimensions.push({
+            width: parseFloat(inputs[0].value) || 0,
+            height: parseFloat(inputs[1].value) || 0,
+            nos: parseFloat(inputs[2].value) || 0
+        });
+    }
+    document.getElementById('errorBoxInternalWall').innerText = '';
+
+    let gfiVentDimensionsList = document.getElementsByClassName('gfiVentDimensions');
+    let gfiVentDimensions = [];
+
+    for (let e of gfiVentDimensionsList) {
+        let inputs = e.getElementsByTagName('input');
+        let width = inputs[0].value;
+        let height = inputs[1].value;
+        let nos = inputs[2].value;
+
+        if (checkInvalidData(width) || checkInvalidData(height) || checkInvalidData(nos)) {
+            document.getElementById('errorBoxInternalWall').innerText = `Please fill valid data for: ${e.innerText}`;
+            return;
+        }
+    }
+
+    for (let e of gfiVentDimensionsList) {
+        let inputs = e.getElementsByTagName('input');
+        gfiVentDimensions.push({
+            width: parseFloat(inputs[0].value) || 0,
+            height: parseFloat(inputs[1].value) || 0,
+            nos: parseFloat(inputs[2].value) || 0
+        });
+    }
+
+    let gfiPanelInputs = document.getElementById('gfiPanelArea').getElementsByTagName('input');
+    let gfiPanelAreaValue = gfiPanelInputs[0] ? gfiPanelInputs[0].value : '';
+
+    if (checkInvalidData(gfiPanelAreaValue)) {
+        document.getElementById('errorBoxInternalWall').innerText = 'Invalid Panel Area in Internal Wall section';
+        return;
+    }
+    document.getElementById('errorBoxInternalWall').innerText = '';
+    let gfiPanelArea = parseFloat(gfiPanelAreaValue) || 0;
+
+
+    let internalWallData = {
+        wallData: gfiWallsDimensions,
+        gatesData: gfiGatesDimensions,
+        windowsData: gfiWindowsDimensions,
+        ventData: gfiVentDimensions,
+        panelArea: gfiPanelArea
+    };
+
+    let lMeshCornersList = document.getElementsByClassName('lMeshCorners');
+    let lMeshExternalWallList = document.getElementsByClassName('lMeshExternalWall');
+    let lMeshInternalWallList = document.getElementsByClassName('lMeshInternalWall');
+    let lMeshLengthList = document.getElementsByClassName('lMeshLength');
+
+    let lMeshData = {};
+
+    for (let e of lMeshCornersList) {
+        let input = e.getElementsByTagName('input')[0];
+        if (checkInvalidData(input.value)) {
+            document.getElementById('errorBoxOtherData').innerText = `Please fill valid data for: ${e.innerText}`;
+            return;
+        }
+        lMeshData.corners = parseFloat(input.value) || 0;
+    }
+
+    for (let e of lMeshExternalWallList) {
+        let input = e.getElementsByTagName('input')[0];
+        if (checkInvalidData(input.value)) {
+            document.getElementById('errorBoxOtherData').innerText = `Please fill valid data for: ${e.innerText}`;
+            return;
+        }
+        lMeshData.externalWall = parseFloat(input.value) || 0;
+    }
+
+    for (let e of lMeshInternalWallList) {
+        let input = e.getElementsByTagName('input')[0];
+        if (checkInvalidData(input.value)) {
+            document.getElementById('errorBoxOtherData').innerText = `Please fill valid data for: ${e.innerText}`;
+            return;
+        }
+        lMeshData.internalWall = parseFloat(input.value) || 0;
+    }
+
+    for (let e of lMeshLengthList) {
+        let input = e.getElementsByTagName('input')[0];
+        if (checkInvalidData(input.value)) {
+            document.getElementById('errorBoxOtherData').innerText = `Please fill valid data for: ${e.innerText}`;
+            return;
+        }
+        lMeshData.length = parseFloat(input.value) || 0;
+    }
+
+    let fMeshList = document.getElementsByClassName('fMeshLength');
+    let fMeshData = {};
+
+    for (let e of fMeshList) {
+        let inputs = e.getElementsByTagName('input');
+        let length = inputs[0].value;
+        let nos = inputs[1].value;
+
+        if (checkInvalidData(length) || checkInvalidData(nos)) {
+            document.getElementById('errorBoxOtherData').innerText = `Please fill valid data for: F-Mesh`;
+            return;
+        }
+
+        fMeshData.length = parseFloat(length) || 0;
+        fMeshData.nos = parseFloat(nos) || 0;
+    }
+
+    let groundFloorSlabData = {};
+
+    let slabInputs = document.querySelector('.groundFloorSlabArea').getElementsByTagName('input');
+    let slabAreaValue = slabInputs[0].value;
+    let slabDeductionValue = slabInputs[1].value;
+
+    if (checkInvalidData(slabAreaValue)) {
+        document.getElementById('errorBoxOtherData').innerText = 'Invalid Slab Area in Ground Floor Slab section';
+        return;
+    }
+    if (checkInvalidData(slabDeductionValue)) {
+        document.getElementById('errorBoxOtherData').innerText = 'Invalid Deduction in Ground Floor Slab section';
+        return;
+    }
+
+    groundFloorSlabData.slabArea = parseFloat(slabAreaValue) || 0;
+    groundFloorSlabData.deduction = parseFloat(slabDeductionValue) || 0;
+
+    let panelInputs = document.querySelector('.groundFloorPanelArea').getElementsByTagName('input');
+    let panelAreaValue = panelInputs[0].value;
+
+    if (checkInvalidData(panelAreaValue)) {
+        document.getElementById('errorBoxOtherData').innerText = 'Invalid Panel Area in Ground Floor Slab section';
+        return;
+    }
+
+    groundFloorSlabData.panelArea = parseFloat(panelAreaValue) || 0;
+
+    document.getElementById('errorBoxOtherData').innerText = '';
+
+    let Data = {
+        internalWallData: internalWallData,
+        externalWallData: externalWallData,
+        lMesh: lMeshData,
+        fMesh: fMeshData,
+        groundFloorSlab: groundFloorSlabData
+    };
+
+    calculate(Data);
+
+}
+
+
+function calculate(data) {
+
+    // calculation for external wall 
+
+    let areaOfWallsEx = [];
+    let sumOfAreaOfWallsEx = 0;
+    let sumOfLengthOfWallsEx = 0;
+    data.externalWallData.wallData.forEach((e, i) => {
+        areaOfWallsEx[i] = calculateArea(e.length, e.height);
+        sumOfAreaOfWallsEx += areaOfWallsEx[i];
+        sumOfLengthOfWallsEx += e.length;
+    });
+    let wallsEx = {
+        areaOfWalls: areaOfWallsEx,
+        sumOfAreaOfWalls: sumOfAreaOfWallsEx,
+        sumOfLengthOfWalls: sumOfLengthOfWallsEx
+    };
+
+    let areaOfGatesEx = [];
+    let fMeshGatesEx = [];
+    let uMeshGatesEx = [];
+    let sumOfFMeshGatesEx = 0;
+    let sumOfUMeshGatesEx = 0;
+    let sumOfAreaOfGatesEx = 0;
+
+    data.externalWallData.gatesData.forEach((e, i) => {
+        areaOfGatesEx[i] = e.nos * calculateArea(e.width, e.height);
+        sumOfAreaOfGatesEx += areaOfGatesEx[i];
+        fMeshGatesEx[i] = 2 * e.nos;
+        sumOfFMeshGatesEx += fMeshGatesEx[i];
+        uMeshGatesEx[i] = e.nos * (2 * e.height + e.width);
+        sumOfUMeshGatesEx += uMeshGatesEx[i];
+    });
+    let gatesEx = {
+        areaOfGates: areaOfGatesEx,
+        sumOfAreaOfGates: sumOfAreaOfGatesEx,
+        fMesh: fMeshGatesEx,
+        sumOfFMesh: sumOfFMeshGatesEx,
+        uMesh: uMeshGatesEx,
+        sumOfUMesh: sumOfUMeshGatesEx
+    };
+
+    let areaOfWindowsEx = [];
+    let fMeshWinEx = [];
+    let uMeshWinEx = [];
+    let sumOfFMeshWinEx = 0;
+    let sumOfUMeshWinEx = 0;
+    let sumOfAreaOfWindowsEx = 0;
+
+    data.externalWallData.windowsData.forEach((e, i) => {
+        areaOfWindowsEx[i] = e.nos * calculateArea(e.width, e.height);
+        sumOfAreaOfWindowsEx += areaOfWindowsEx[i];
+        fMeshWinEx[i] = 4 * e.nos;
+        sumOfFMeshWinEx += fMeshWinEx[i];
+        uMeshWinEx[i] = e.nos * (2 * (e.width + e.height));
+        sumOfUMeshWinEx += uMeshWinEx[i];
+    });
+    let windowsEx = {
+        areaOfWindows: areaOfWindowsEx,
+        sumOfAreaOfWindows: sumOfAreaOfWindowsEx,
+        fMesh: fMeshWinEx,
+        sumOfFMesh: sumOfFMeshWinEx,
+        uMesh: uMeshWinEx,
+        sumOfUMesh: sumOfUMeshWinEx
+    };
+
+    let areaOfVentEx = [];
+    let fMeshVentEx = [];
+    let uMeshVentEx = [];
+    let sumOfFMeshVentEx = 0;
+    let sumOfUMeshVentEx = 0;
+    let sumOfAreaOfVentsEx = 0;
+
+    data.externalWallData.ventData.forEach((e, i) => {
+        areaOfVentEx[i] = e.nos * calculateArea(e.width, e.height);
+        sumOfAreaOfVentsEx += areaOfVentEx[i];
+        fMeshVentEx[i] = 4 * e.nos;
+        sumOfFMeshVentEx += fMeshVentEx[i];
+        uMeshVentEx[i] = e.nos * (2 * (e.height + e.width));
+        sumOfUMeshVentEx += uMeshVentEx[i];
+    });
+    let ventsEx = {
+        areaOfVent: areaOfVentEx,
+        sumOfAreaOfVents: sumOfAreaOfVentsEx,
+        fMesh: fMeshVentEx,
+        sumOfFMesh: sumOfFMeshVentEx,
+        uMesh: uMeshVentEx,
+        sumOfUMesh: sumOfUMeshVentEx
+    };
+
+    let openingScheduleExternalWall = {
+        totalArea: sumOfAreaOfGatesEx + sumOfAreaOfWindowsEx + sumOfAreaOfVentsEx,
+        totalUMesh: sumOfUMeshGatesEx + sumOfUMeshWinEx + sumOfUMeshVentEx,
+        totalFMesh: sumOfFMeshGatesEx + sumOfFMeshWinEx + sumOfFMeshVentEx
+    };
+
+
+    // calculation for internal wall
+
+    let areaOfWallsInt = [];
+    let sumOfAreaOfWallsInt = 0;
+    let sumOfLengthOfWallsInt = 0;
+
+    data.internalWallData.wallData.forEach((e, i) => {
+        areaOfWallsInt[i] = calculateArea(e.length, e.height);
+        sumOfAreaOfWallsInt += areaOfWallsInt[i];
+        sumOfLengthOfWallsInt += e.length;
+    });
+    let wallsInt = {
+        areaOfWalls: areaOfWallsInt,
+        sumOfAreaOfWalls: sumOfAreaOfWallsInt,
+        sumOfLengthOfWalls: sumOfLengthOfWallsInt
+    };
+
+    let areaOfGatesInt = [];
+    let fMeshGatesInt = [];
+    let uMeshGatesInt = [];
+    let sumOfFMeshGatesInt = 0;
+    let sumOfUMeshGatesInt = 0;
+    let sumOfAreaOfGatesInt = 0;
+
+    data.internalWallData.gatesData.forEach((e, i) => {
+        areaOfGatesInt[i] = e.nos * calculateArea(e.width, e.height);
+        sumOfAreaOfGatesInt += areaOfGatesInt[i];
+        fMeshGatesInt[i] = 2 * e.nos;
+        sumOfFMeshGatesInt += fMeshGatesInt[i];
+        uMeshGatesInt[i] = e.nos * (2 * e.height + e.width);
+        sumOfUMeshGatesInt += uMeshGatesInt[i];
+    });
+    let gatesInt = {
+        areaOfGates: areaOfGatesInt,
+        sumOfAreaOfGates: sumOfAreaOfGatesInt,
+        fMesh: fMeshGatesInt,
+        sumOfFMesh: sumOfFMeshGatesInt,
+        uMesh: uMeshGatesInt,
+        sumOfUMesh: sumOfUMeshGatesInt
+    };
+
+    let areaOfWindowsInt = [];
+    let fMeshWinInt = [];
+    let uMeshWinInt = [];
+    let sumOfFMeshWinInt = 0;
+    let sumOfUMeshWinInt = 0;
+    let sumOfAreaOfWindowsInt = 0;
+
+    data.internalWallData.windowsData.forEach((e, i) => {
+        areaOfWindowsInt[i] = e.nos * calculateArea(e.width, e.height);
+        sumOfAreaOfWindowsInt += areaOfWindowsInt[i];
+        fMeshWinInt[i] = 4 * e.nos;
+        sumOfFMeshWinInt += fMeshWinInt[i];
+        uMeshWinInt[i] = e.nos * (2 * (e.width + e.height));
+        sumOfUMeshWinInt += uMeshWinInt[i];
+    });
+    let windowsInt = {
+        areaOfWindows: areaOfWindowsInt,
+        sumOfAreaOfWindows: sumOfAreaOfWindowsInt,
+        fMesh: fMeshWinInt,
+        sumOfFMesh: sumOfFMeshWinInt,
+        uMesh: uMeshWinInt,
+        sumOfUMesh: sumOfUMeshWinInt
+    };
+
+    let areaOfVentInt = [];
+    let fMeshVentInt = [];
+    let uMeshVentInt = [];
+    let sumOfFMeshVentInt = 0;
+    let sumOfUMeshVentInt = 0;
+    let sumOfAreaOfVentsInt = 0;
+
+    data.internalWallData.ventData.forEach((e, i) => {
+        areaOfVentInt[i] = e.nos * calculateArea(e.width, e.height);
+        sumOfAreaOfVentsInt += areaOfVentInt[i];
+        fMeshVentInt[i] = 4 * e.nos;
+        sumOfFMeshVentInt += fMeshVentInt[i];
+        uMeshVentInt[i] = e.nos * (2 * (e.height + e.width));
+        sumOfUMeshVentInt += uMeshVentInt[i];
+    });
+    let ventsInt = {
+        areaOfVent: areaOfVentInt,
+        sumOfAreaOfVents: sumOfAreaOfVentsInt,
+        fMesh: fMeshVentInt,
+        sumOfFMesh: sumOfFMeshVentInt,
+        uMesh: uMeshVentInt,
+        sumOfUMesh: sumOfUMeshVentInt
+    };
+
+    let openingScheduleInternalWall = {
+        totalArea: sumOfAreaOfGatesInt + sumOfAreaOfWindowsInt + sumOfAreaOfVentsInt,
+        totalUMesh: sumOfUMeshGatesInt + sumOfUMeshWinInt + sumOfUMeshVentInt,
+        totalFMesh: sumOfFMeshGatesInt + sumOfFMeshWinInt + sumOfFMeshVentInt
+    };
+
+
+    //calculation for Main walls 
+
+    let totalAreaAfterDeductionInt = wallsInt.sumOfAreaOfWalls - openingScheduleInternalWall.totalArea;
+    let panelAreaInt = data.internalWallData.panelArea || 1;
+    let nosOfPanelsInt = totalAreaAfterDeductionInt / panelAreaInt;
+
+    let mainWallInt = {
+        totalArea: totalAreaAfterDeductionInt,
+        nosOfPanels: nosOfPanelsInt
+    }
+
+    let totalAreaAfterDeductionEx = wallsEx.sumOfAreaOfWalls - openingScheduleExternalWall.totalArea;
+    let panelAreaEx = data.externalWallData.panelArea || 1;
+    let nosOfPanelsEx = totalAreaAfterDeductionEx / panelAreaEx;
+
+    let mainWallEx = {
+        totalArea: totalAreaAfterDeductionEx,
+        nosOfPanels: nosOfPanelsEx
+    }
+
+    // calculation for Ground Floor Slab
+
+    let slabArea = data.groundFloorSlab.slabArea || 0;
+    let deduction = data.groundFloorSlab.deduction || 0;
+    let panelArea = data.groundFloorSlab.panelArea || 1;
+
+    let totalArea = slabArea - deduction;
+    let nosOfPanels = totalArea / panelArea;
+
+    let groundFloorSlab = {
+        slabArea: slabArea,
+        deduction: deduction,
+        totalArea: totalArea,
+        panelArea: panelArea,
+        nosOfPanels: nosOfPanels
+    };
+
+
+    // calculation for lMesh
+
+    let wallHeight = data.externalWallData.wallData[0]?.height || 0;
+    let totalLengthCorners = wallHeight * data.lMesh.corners;
+    let totalLengthExternalWall = wallsEx.sumOfLengthOfWalls * data.lMesh.externalWall;
+    let totalLengthInternalWall = wallsInt.sumOfLengthOfWalls * data.lMesh.internalWall;
+    let totalLengthLMesh = totalLengthCorners + totalLengthExternalWall + totalLengthInternalWall;
+    let nosOfLMesh = totalLengthLMesh / (data.lMesh.length || 1);
+
+    let lMesh = {
+        totalLengthCorners: totalLengthCorners,
+        totalLengthExternalWall: totalLengthExternalWall,
+        totalLengthInternalWall: totalLengthInternalWall,
+        totalLengthLMesh: totalLengthLMesh,
+        nosOfLMesh: nosOfLMesh
+    }
+
+    //calculation for F-Mesh joints
+
+    let length = wallsEx.sumOfLengthOfWalls + wallsInt.sumOfLengthOfWalls;
+    let totalLength = length * data.fMesh.nos
+    let nosOfFMesh = totalLength / (data.fMesh.length || 1);
+
+    let fMesh = {
+        length: length,
+        totalLength: totalLength,
+        nosJoints: nosOfFMesh,
+        nosOpening: openingScheduleExternalWall.totalFMesh + openingScheduleInternalWall.totalFMesh
+    }
+
+    // calculation for u mesh 
+
+    let uMesh = {
+        externalWall: openingScheduleExternalWall.totalUMesh / 4,
+        internalWall: openingScheduleInternalWall.totalUMesh /4
+    }
+
+    calculationData = {
+        wallsEx,
+        gatesEx,
+        windowsEx,
+        ventsEx,
+        openingScheduleExternalWall,
+        wallsInt,
+        gatesInt,
+        windowsInt,
+        ventsInt,
+        openingScheduleInternalWall,
+        mainWallInt,
+        mainWallEx,
+        groundFloorSlab,
+        lMesh,
+        fMesh,
+        uMesh
+    };
+
+
+
+    paintMaterialCalculation(data, calculationData);
+
+}
+
+
+
+function paintMaterialCalculation(inputData, calculationData) {
+  const snippetArea = document.getElementById('solutionTextAreaGroundFloor');
+
+  let explanation = `# Material Calculation Report\n\n`;
+
+  // EXTERNAL WALLS
+  explanation += `## External Walls\n`;
+  inputData.externalWallData.wallData.forEach((wall, idx) => {
+    explanation += `Wall ${idx + 1}: Length = ${wall.length} ft, Height = ${wall.height} ft\n`;
+    explanation += `Area = ${calculationData.wallsEx.areaOfWalls[idx].toFixed(2)} sq.ft\n\n`;
+  });
+  explanation += `Total External Wall Area = ${calculationData.wallsEx.sumOfAreaOfWalls.toFixed(2)} sq.ft\n`;
+  explanation += `Openings (Gates/Windows/Vents) = ${calculationData.openingScheduleExternalWall.totalArea.toFixed(2)} sq.ft\n`;
+  explanation += `Net Area After Deductions = ${calculationData.mainWallEx.totalArea.toFixed(2)} sq.ft\n`;
+  explanation += `Panels Required = ${calculationData.mainWallEx.totalArea.toFixed(2)} ÷ ${inputData.externalWallData.panelArea} = ${calculationData.mainWallEx.nosOfPanels.toFixed(2)} nos\n\n`;
+  explanation += `----------------------------------------\n\n`;
+
+  // INTERNAL WALLS
+  explanation += `## Internal Walls\n`;
+  inputData.internalWallData.wallData.forEach((wall, idx) => {
+    explanation += `Wall ${idx + 1}: Length = ${wall.length} ft, Height = ${wall.height} ft\n`;
+    explanation += `Area = ${calculationData.wallsInt.areaOfWalls[idx].toFixed(2)} sq.ft\n\n`;
+  });
+  explanation += `Total Internal Wall Area = ${calculationData.wallsInt.sumOfAreaOfWalls.toFixed(2)} sq.ft\n`;
+  explanation += `Openings (Gates/Windows/Vents) = ${calculationData.openingScheduleInternalWall.totalArea.toFixed(2)} sq.ft\n`;
+  explanation += `Net Area After Deductions = ${calculationData.mainWallInt.totalArea.toFixed(2)} sq.ft\n`;
+  explanation += `Panels Required = ${calculationData.mainWallInt.totalArea.toFixed(2)} ÷ ${inputData.internalWallData.panelArea} = ${calculationData.mainWallInt.nosOfPanels.toFixed(2)} nos\n\n`;
+  explanation += `----------------------------------------\n\n`;
+
+  // GROUND FLOOR SLAB
+  explanation += `## Ground Floor Slab\n`;
+  explanation += `Slab Area = ${calculationData.groundFloorSlab.slabArea.toFixed(2)} sq.ft\n`;
+  explanation += `Deduction = ${calculationData.groundFloorSlab.deduction.toFixed(2)} sq.ft\n`;
+  explanation += `Net Area After Deductions = ${calculationData.groundFloorSlab.totalArea.toFixed(2)} sq.ft\n`;
+  explanation += `Panels Required = ${calculationData.groundFloorSlab.totalArea.toFixed(2)} ÷ ${calculationData.groundFloorSlab.panelArea.toFixed(2)} = ${calculationData.groundFloorSlab.nosOfPanels.toFixed(2)} nos\n\n`;
+  explanation += `----------------------------------------\n\n`;
+
+  // L-MESH
+  explanation += `## L-MESH\n`;
+  explanation += `Corners: ${calculationData.lMesh.totalLengthCorners.toFixed(2)} ft\n`;
+  explanation += `External Wall: ${calculationData.lMesh.totalLengthExternalWall.toFixed(2)} ft\n`;
+  explanation += `Internal Wall: ${calculationData.lMesh.totalLengthInternalWall.toFixed(2)} ft\n`;
+  explanation += `Total Length L-MESH = ${calculationData.lMesh.totalLengthLMesh.toFixed(2)} ft\n`;
+  explanation += `Pieces Required = ${calculationData.lMesh.totalLengthLMesh.toFixed(2)} ÷ ${inputData.lMesh.length} = ${calculationData.lMesh.nosOfLMesh.toFixed(2)} nos\n\n`;
+  explanation += `----------------------------------------\n\n`;
+
+  // F-MESH (JOINTS AND OPENINGS)
+  explanation += `## F-MESH\n`;
+  explanation += `Wall Length for Joints = ${calculationData.fMesh.totalLength.toFixed(2)} ft\n`;
+  explanation += `Total Length for Joints = ${calculationData.fMesh.totalLength.toFixed(2)} ft\n`;
+  explanation += `Pieces Required (Joints) = ${calculationData.fMesh.totalLength.toFixed(2)} ÷ ${inputData.fMesh.length} = ${calculationData.fMesh.nosJoints.toFixed(2)} nos\n`;
+  explanation += `Pieces Required (Openings) = ${calculationData.fMesh.nosOpening.toFixed(2)} nos\n\n`;
+
+  explanation += `----------------------------------------\n\n`;
+
+  // U-MESH
+  explanation += `Total Length for U-MESH (External Wall) = ${calculationData.openingScheduleExternalWall.totalUMesh.toFixed(2)} ft\n`;
+  explanation += `Total Length for U-MESH (Internal Wall) = ${calculationData.openingScheduleInternalWall.totalUMesh.toFixed(2)} ft\n`;
+
+
+  explanation += `----------------------------------------\n\n`;
+
+  // FINAL SUMMARY
+  explanation += `# Final Material Requirement Summary\n\n`;
+  explanation += `External Wall Panels: ${calculationData.mainWallEx.nosOfPanels.toFixed(2)} nos\n`;
+  explanation += `Internal Wall Panels: ${calculationData.mainWallInt.nosOfPanels.toFixed(2)} nos\n`;
+  explanation += `Ground Floor Slab Panels: ${calculationData.groundFloorSlab.nosOfPanels.toFixed(2)} nos\n`;
+  explanation += `L-MESH: ${calculationData.lMesh.nosOfLMesh.toFixed(2)} nos\n`;
+  explanation += `F-MESH (Joints): ${calculationData.fMesh.nosJoints.toFixed(2)} nos\n`;
+  explanation += `F-MESH (Openings): ${calculationData.fMesh.nosOpening.toFixed(2)} nos\n`;
+  explanation += `U-MESH (External Wall): ${calculationData.uMesh.externalWall.toFixed(2)} nos\n`;
+  explanation += `U-MESH (Internal Wall): ${calculationData.uMesh.internalWall.toFixed(2)} nos\n`;
+
+
+  snippetArea.innerHTML = `<pre>${explanation}</pre>`;
+
+  // Generate PDF
+  const doc = new jsPDF();
+  const lines = explanation.split('\n');
+  let y = 10;
+
+  doc.setFont('courier');
+  doc.setFontSize(10);
+
+  lines.forEach(line => {
+    if (y > 280) {
+      doc.addPage();
+      y = 10;
+    }
+    doc.text(line, 10, y);
+    y += 5;
+  });
+
+  doc.save('Material-Calculation-Report.pdf');
+}
+
+
