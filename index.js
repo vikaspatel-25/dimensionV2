@@ -77,12 +77,12 @@ function handleDisable(dropId,input1,input2){
           else return false;
 }
 
-// (function(){
-//   let allInputs = document.getElementsByClassName('input-box');
-//   Array.from(allInputs).forEach((e)=>{
-//     e.value = 1
-//   })
-// })();
+(function(){
+  let allInputs = document.getElementsByClassName('input-box');
+  Array.from(allInputs).forEach((e)=>{
+    e.value = 1
+  })
+})();
 
 function calculateArea(height,width){
         return height*width;
@@ -721,11 +721,11 @@ function calculate(data) {
 }
 
 
-
+let explanation = ``;
 function paintMaterialCalculation(inputData, calculationData) {
   const snippetArea = document.getElementById('solutionTextAreaGroundFloor');
 
-  let explanation = `# Material Calculation Report\n\n`;
+  explanation = `# Material Calculation Report\n\n`;
 
   // EXTERNAL WALLS
   explanation += `## External Walls\n`;
@@ -798,7 +798,11 @@ function paintMaterialCalculation(inputData, calculationData) {
 
   snippetArea.innerHTML = `<pre>${explanation}</pre>`;
 
-  // Generate PDF
+}
+
+function downloadPdf(){
+    
+  const { jsPDF } = window.jspdf; 
   const doc = new jsPDF();
   const lines = explanation.split('\n');
   let y = 10;
@@ -816,6 +820,5 @@ function paintMaterialCalculation(inputData, calculationData) {
   });
 
   doc.save('Material-Calculation-Report.pdf');
+
 }
-
-
