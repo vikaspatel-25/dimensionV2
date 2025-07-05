@@ -80,7 +80,7 @@ function handleDisable(dropId,input1,input2){
 (function(){
   let allInputs = document.getElementsByClassName('input-box');
   Array.from(allInputs).forEach((e)=>{
-    e.value = 1
+    e.value = 100
   })
 })();
 
@@ -721,104 +721,508 @@ function calculate(data) {
 }
 
 
-let explanation = ``;
-function paintMaterialCalculation(inputData, calculationData) {
-  const snippetArea = document.getElementById('solutionTextAreaGroundFloor');
 
-  explanation = `# Material Calculation Report\n\n`;
+function roofStatus(e) {
 
-  // EXTERNAL WALLS
-  explanation += `## External Walls\n`;
-  inputData.externalWallData.wallData.forEach((wall, idx) => {
-    explanation += `Wall ${idx + 1}: Length = ${wall.length} ft, Height = ${wall.height} ft\n`;
-    explanation += `Area = ${calculationData.wallsEx.areaOfWalls[idx].toFixed(2)} sq.ft\n\n`;
-  });
-  explanation += `Total External Wall Area = ${calculationData.wallsEx.sumOfAreaOfWalls.toFixed(2)} sq.ft\n`;
-  explanation += `Openings (Gates/Windows/Vents) = ${calculationData.openingScheduleExternalWall.totalArea.toFixed(2)} sq.ft\n`;
-  explanation += `Net Area After Deductions = ${calculationData.mainWallEx.totalArea.toFixed(2)} sq.ft\n`;
-  explanation += `Panels Required = ${calculationData.mainWallEx.totalArea.toFixed(2)} ÷ ${inputData.externalWallData.panelArea} = ${calculationData.mainWallEx.nosOfPanels.toFixed(2)} nos\n\n`;
-  explanation += `----------------------------------------\n\n`;
+let lMeshExternalWall = document.querySelectorAll('.lMeshExternalWall input');
+let lMeshInternalWall = document.querySelectorAll('.lMeshInternalWall input');
 
-  // INTERNAL WALLS
-  explanation += `## Internal Walls\n`;
-  inputData.internalWallData.wallData.forEach((wall, idx) => {
-    explanation += `Wall ${idx + 1}: Length = ${wall.length} ft, Height = ${wall.height} ft\n`;
-    explanation += `Area = ${calculationData.wallsInt.areaOfWalls[idx].toFixed(2)} sq.ft\n\n`;
-  });
-  explanation += `Total Internal Wall Area = ${calculationData.wallsInt.sumOfAreaOfWalls.toFixed(2)} sq.ft\n`;
-  explanation += `Openings (Gates/Windows/Vents) = ${calculationData.openingScheduleInternalWall.totalArea.toFixed(2)} sq.ft\n`;
-  explanation += `Net Area After Deductions = ${calculationData.mainWallInt.totalArea.toFixed(2)} sq.ft\n`;
-  explanation += `Panels Required = ${calculationData.mainWallInt.totalArea.toFixed(2)} ÷ ${inputData.internalWallData.panelArea} = ${calculationData.mainWallInt.nosOfPanels.toFixed(2)} nos\n\n`;
-  explanation += `----------------------------------------\n\n`;
-
-  // GROUND FLOOR SLAB
-  explanation += `## Ground Floor Slab\n`;
-  explanation += `Slab Area = ${calculationData.groundFloorSlab.slabArea.toFixed(2)} sq.ft\n`;
-  explanation += `Deduction = ${calculationData.groundFloorSlab.deduction.toFixed(2)} sq.ft\n`;
-  explanation += `Net Area After Deductions = ${calculationData.groundFloorSlab.totalArea.toFixed(2)} sq.ft\n`;
-  explanation += `Panels Required = ${calculationData.groundFloorSlab.totalArea.toFixed(2)} ÷ ${calculationData.groundFloorSlab.panelArea.toFixed(2)} = ${calculationData.groundFloorSlab.nosOfPanels.toFixed(2)} nos\n\n`;
-  explanation += `----------------------------------------\n\n`;
-
-  // L-MESH
-  explanation += `## L-MESH\n`;
-  explanation += `Corners: ${calculationData.lMesh.totalLengthCorners.toFixed(2)} ft\n`;
-  explanation += `External Wall: ${calculationData.lMesh.totalLengthExternalWall.toFixed(2)} ft\n`;
-  explanation += `Internal Wall: ${calculationData.lMesh.totalLengthInternalWall.toFixed(2)} ft\n`;
-  explanation += `Total Length L-MESH = ${calculationData.lMesh.totalLengthLMesh.toFixed(2)} ft\n`;
-  explanation += `Pieces Required = ${calculationData.lMesh.totalLengthLMesh.toFixed(2)} ÷ ${inputData.lMesh.length} = ${calculationData.lMesh.nosOfLMesh.toFixed(2)} nos\n\n`;
-  explanation += `----------------------------------------\n\n`;
-
-  // F-MESH (JOINTS AND OPENINGS)
-  explanation += `## F-MESH\n`;
-  explanation += `Wall Length for Joints = ${calculationData.fMesh.totalLength.toFixed(2)} ft\n`;
-  explanation += `Total Length for Joints = ${calculationData.fMesh.totalLength.toFixed(2)} ft\n`;
-  explanation += `Pieces Required (Joints) = ${calculationData.fMesh.totalLength.toFixed(2)} ÷ ${inputData.fMesh.length} = ${calculationData.fMesh.nosJoints.toFixed(2)} nos\n`;
-  explanation += `Pieces Required (Openings) = ${calculationData.fMesh.nosOpening.toFixed(2)} nos\n\n`;
-
-  explanation += `----------------------------------------\n\n`;
-
-  // U-MESH
-  explanation += `Total Length for U-MESH (External Wall) = ${calculationData.openingScheduleExternalWall.totalUMesh.toFixed(2)} ft\n`;
-  explanation += `Total Length for U-MESH (Internal Wall) = ${calculationData.openingScheduleInternalWall.totalUMesh.toFixed(2)} ft\n`;
-
-
-  explanation += `----------------------------------------\n\n`;
-
-  // FINAL SUMMARY
-  explanation += `# Final Material Requirement Summary\n\n`;
-  explanation += `External Wall Panels: ${calculationData.mainWallEx.nosOfPanels.toFixed(2)} nos\n`;
-  explanation += `Internal Wall Panels: ${calculationData.mainWallInt.nosOfPanels.toFixed(2)} nos\n`;
-  explanation += `Ground Floor Slab Panels: ${calculationData.groundFloorSlab.nosOfPanels.toFixed(2)} nos\n`;
-  explanation += `L-MESH: ${calculationData.lMesh.nosOfLMesh.toFixed(2)} nos\n`;
-  explanation += `F-MESH (Joints): ${calculationData.fMesh.nosJoints.toFixed(2)} nos\n`;
-  explanation += `F-MESH (Openings): ${calculationData.fMesh.nosOpening.toFixed(2)} nos\n`;
-  explanation += `U-MESH (External Wall): ${calculationData.uMesh.externalWall.toFixed(2)} nos\n`;
-  explanation += `U-MESH (Internal Wall): ${calculationData.uMesh.internalWall.toFixed(2)} nos\n`;
-
-
-  snippetArea.innerHTML = `<pre>${explanation}</pre>`;
-
+if (e.checked) {
+    lMeshExternalWall.forEach(input => input.disabled = false);
+    lMeshInternalWall.forEach(input => input.disabled = false);
+} else {
+    lMeshExternalWall.forEach(input => {
+    input.disabled = true;
+    input.value = 0;
+    });
+    lMeshInternalWall.forEach(input => {
+    input.disabled = true;
+    input.value = 0;
+    });
+}
 }
 
-function downloadPdf(){
-    
-  const { jsPDF } = window.jspdf; 
-  const doc = new jsPDF();
-  const lines = explanation.split('\n');
-  let y = 10;
+function addInputFieldsGf(parentId, dropDownId) {
+        
+    if (parentId === 'gfeWalls') {
+        let inputValueL = document.getElementById('g-f-e-w-1-l').value;
+        let inputValueH = document.getElementById('g-f-e-w-1-h').value;
+        let number = parseInt(document.getElementById(dropDownId).value, 10);
+        let parent = document.getElementById(parentId);
 
-  doc.setFont('courier');
-  doc.setFontSize(10);
+        const existing = parent.querySelectorAll('.gfeWallsDimensions');
+        existing.forEach(el => parent.removeChild(el));
 
-  lines.forEach(line => {
-    if (y > 280) {
-      doc.addPage();
-      y = 10;
+    for (let i = 1; i <= number; i++) {
+        let child = document.createElement('div');
+        child.className = 'input-row gfeWallsDimensions';
+
+        let onInputAttr = i === 1 ? `oninput="handleDisable('gfeWallsNum','g-f-e-w-1-l','g-f-e-w-1-h')"` : '';
+        let id1 = i === 1 ? `id="g-f-e-w-1-l"` : '';
+        let id2 = i === 1 ? `id="g-f-e-w-1-h"` : '';
+
+        let htmlString = `
+        Wall ${i}: 
+        <input ${onInputAttr} ${id1} type="number" placeholder="length" value="${inputValueL}" class="input-box">
+        <input ${onInputAttr} ${id2} type="number" placeholder="height" value="${inputValueH}" class="input-box">
+        `;
+
+        child.innerHTML = htmlString;
+        parent.appendChild(child);
     }
-    doc.text(line, 10, y);
-    y += 5;
-  });
 
-  doc.save('Material-Calculation-Report.pdf');
+    }    
+    
+    if (parentId === 'gfeGates') {
+    let inputValueW = document.getElementById('g-f-e-d-1-w').value;
+    let inputValueH = document.getElementById('g-f-e-d-1-h').value;
+    let number = parseInt(document.getElementById(dropDownId).value, 10);
+    let parent = document.getElementById(parentId);
 
+    const existing = parent.querySelectorAll('.gfeGatesDimensions');
+    existing.forEach(el => parent.removeChild(el));
+
+    for (let i = 1; i <= number; i++) {
+        let child = document.createElement('div');
+        child.className = 'input-row gfeGatesDimensions';
+
+        let onInputAttr = i === 1 ? `oninput="handleDisable('gfeGatesNum','g-f-e-d-1-w','g-f-e-d-1-h')"` : '';
+        let id1 = i === 1 ? `id="g-f-e-d-1-w"` : '';
+        let id2 = i === 1 ? `id="g-f-e-d-1-h"` : '';
+
+        let htmlString = `
+                Gate ${i}: 
+            <input ${onInputAttr} ${id1} type="number" placeholder="width" value="${inputValueW}" class="input-box">
+            <input ${onInputAttr} ${id2} type="number" placeholder="height" value="${inputValueH}" class="input-box">
+            <input type="number" placeholder="No.s" value="1" class="input-box">
+            `;
+
+            child.innerHTML = htmlString;
+            parent.appendChild(child);
+    }
+}
+
+    if (parentId === 'gfeWindows') {
+        let inputValueW = document.getElementById('g-f-e-win-1-w').value;
+        let inputValueH = document.getElementById('g-f-e-win-1-h').value;
+        let number = parseInt(document.getElementById(dropDownId).value, 10);
+        let parent = document.getElementById(parentId);
+
+        const existing = parent.querySelectorAll('.gfeWindowsDimensions');
+        existing.forEach(el => parent.removeChild(el));
+
+        for (let i = 1; i <= number; i++) {
+            let child = document.createElement('div');
+            child.className = 'input-row gfeWindowsDimensions';
+
+            let onInputAttr = i === 1 ? `oninput="handleDisable('gfeWindowsNum','g-f-e-win-1-w','g-f-e-win-1-h')"` : '';
+            let id1 = i === 1 ? `id="g-f-e-win-1-w"` : '';
+            let id2 = i === 1 ? `id="g-f-e-win-1-h"` : '';
+
+            let htmlString = `
+                Win ${i}: 
+                <input ${onInputAttr} ${id1} type="number" placeholder="width" value="${inputValueW}" class="input-box">
+                <input ${onInputAttr} ${id2} type="number" placeholder="height" value="${inputValueH}" class="input-box">
+                <input type="number" placeholder="No.s" value="1" class="input-box">
+            `;
+
+            child.innerHTML = htmlString;
+            parent.appendChild(child);
+        }
+    }
+
+        if (parentId === 'gfeVent') {
+        let inputValueW = document.getElementById('g-f-e-v-1-w').value;
+        let inputValueH = document.getElementById('g-f-e-v-1-h').value;
+        let number = parseInt(document.getElementById(dropDownId).value, 10);
+        let parent = document.getElementById(parentId);
+
+        const existing = parent.querySelectorAll('.gfeVentDimensions');
+        existing.forEach(el => parent.removeChild(el));
+
+        for (let i = 1; i <= number; i++) {
+            let child = document.createElement('div');
+            child.className = 'input-row gfeVentDimensions';
+
+            let onInputAttr = i === 1 ? `oninput="handleDisable('gfeVentNum','g-f-e-v-1-w','g-f-e-v-1-h')"` : '';
+            let id1 = i === 1 ? `id="g-f-e-v-1-w"` : '';
+            let id2 = i === 1 ? `id="g-f-e-v-1-h"` : '';
+
+            let htmlString = `
+                Vent ${i}: 
+                <input ${onInputAttr} ${id1} type="number" placeholder="width" value="${inputValueW}" class="input-box">
+                <input ${onInputAttr} ${id2} type="number" placeholder="height" value="${inputValueH}" class="input-box">
+                <input type="number" placeholder="No.s" value="1" class="input-box">
+            `;
+
+            child.innerHTML = htmlString;
+            parent.appendChild(child);
+        }
+    }
+
+    if (parentId === 'gfiWalls') {
+        let inputValueL = document.getElementById('g-f-i-w-1-l').value;
+        let inputValueH = document.getElementById('g-f-i-w-1-h').value;
+        let number = parseInt(document.getElementById(dropDownId).value, 10);
+        let parent = document.getElementById(parentId);
+
+        const existing = parent.querySelectorAll('.gfiWallsDimensions');
+        existing.forEach(el => parent.removeChild(el));
+
+        for (let i = 1; i <= number; i++) {
+            let child = document.createElement('div');
+            child.className = 'input-row gfiWallsDimensions';
+
+            let onInputAttr = i === 1 ? `oninput="handleDisable('gfiWallsNum','g-f-i-w-1-l','g-f-i-w-1-h')"` : '';
+            let id1 = i === 1 ? `id="g-f-i-w-1-l"` : '';
+            let id2 = i === 1 ? `id="g-f-i-w-1-h"` : '';
+
+            let htmlString = `
+                Wall ${i}:
+                <input ${onInputAttr} ${id1} type="number" placeholder="length" value="${inputValueL}" class="input-box">
+                <input ${onInputAttr} ${id2} type="number" placeholder="height" value="${inputValueH}" class="input-box">
+            `;
+
+            child.innerHTML = htmlString;
+            parent.appendChild(child);
+        }
+    }
+
+        if (parentId === 'gfiGates') {
+        let inputValueL = document.getElementById('g-f-i-d-1-w').value;
+        let inputValueH = document.getElementById('g-f-i-d-1-h').value;
+        let number = parseInt(document.getElementById(dropDownId).value, 10);
+        let parent = document.getElementById(parentId);
+
+        const existing = parent.querySelectorAll('.gfiGatesDimensions');
+        existing.forEach(el => parent.removeChild(el));
+
+        for (let i = 1; i <= number; i++) {
+            let child = document.createElement('div');
+            child.className = 'input-row gfiGatesDimensions';
+
+            let onInputAttr = i === 1 ? `oninput="handleDisable('gfiGatesNum','g-f-i-d-1-w','g-f-i-d-1-h')"` : '';
+                let id1 = i === 1 ? `id="g-f-i-d-1-w"` : '';
+                let id2 = i === 1 ? `id="g-f-i-d-1-h"` : '';
+
+                let htmlString = `
+                    Door ${i}:
+                    <input ${onInputAttr} ${id1} type="number" placeholder="width" value="${inputValueL}" class="input-box">
+                    <input ${onInputAttr} ${id2} type="number" placeholder="height" value="${inputValueH}" class="input-box">
+                    <input type="number" placeholder="No.s" value="1" class="input-box">
+                                `;
+
+                            child.innerHTML = htmlString;
+                                parent.appendChild(child);
+                        }
+                }
+
+        if (parentId === 'gfiWindows') {
+            let inputValueL = document.getElementById('g-f-i-win-1-w').value;
+            let inputValueH = document.getElementById('g-f-i-win-1-h').value;
+            let number = parseInt(document.getElementById(dropDownId).value, 10);
+            let parent = document.getElementById(parentId);
+
+            const existing = parent.querySelectorAll('.gfiWindowsDimensions');
+            existing.forEach(el => parent.removeChild(el));
+
+            for (let i = 1; i <= number; i++) {
+                let child = document.createElement('div');
+                child.className = 'input-row gfiWindowsDimensions';
+
+                let onInputAttr = i === 1 ? `oninput="handleDisable('gfiWindowsNum','g-f-i-win-1-w','g-f-i-win-1-h')"` : '';
+                let id1 = i === 1 ? `id="g-f-i-win-1-w"` : '';
+                let id2 = i === 1 ? `id="g-f-i-win-1-h"` : '';
+
+                let htmlString = `
+                    Win ${i}:
+                    <input ${onInputAttr} ${id1} type="number" placeholder="width" value="${inputValueL}" class="input-box">
+                    <input ${onInputAttr} ${id2} type="number" placeholder="height" value="${inputValueH}" class="input-box">
+                    <input type="number" placeholder="No.s" value="1" class="input-box">
+                `;
+
+                child.innerHTML = htmlString;
+                parent.appendChild(child);
+            }
+        }
+
+    if (parentId === 'gfiWindows') {
+    let inputValueL = document.getElementById('g-f-i-win-1-w').value;
+    let inputValueH = document.getElementById('g-f-i-win-1-h').value;
+    let number = parseInt(document.getElementById(dropDownId).value, 10);
+    let parent = document.getElementById(parentId);
+
+    const existing = parent.querySelectorAll('.gfiWindowsDimensions');
+    existing.forEach(el => parent.removeChild(el));
+
+    for (let i = 1; i <= number; i++) {
+        let child = document.createElement('div');
+        child.className = 'input-row gfiWindowsDimensions';
+
+        let onInputAttr = i === 1 ? `oninput="handleDisable('gfiWindowsNum','g-f-i-win-1-w','g-f-i-win-1-h')"` : '';
+        let id1 = i === 1 ? `id="g-f-i-win-1-w"` : '';
+        let id2 = i === 1 ? `id="g-f-i-win-1-h"` : '';
+
+        let htmlString = `
+            Win ${i}:
+            <input ${onInputAttr} ${id1} type="number" placeholder="width" value="${inputValueL}" class="input-box">
+            <input ${onInputAttr} ${id2} type="number" placeholder="height" value="${inputValueH}" class="input-box">
+            <input type="number" placeholder="No.s" value="1" class="input-box">
+        `;
+
+        child.innerHTML = htmlString;
+        parent.appendChild(child);
+    }
+}
+
+if (parentId === 'gfiVent') {
+    let inputValueL = document.getElementById('g-f-i-v-1-w').value;
+    let inputValueH = document.getElementById('g-f-i-v-1-h').value;
+    let number = parseInt(document.getElementById(dropDownId).value, 10);
+    let parent = document.getElementById(parentId);
+
+    const existing = parent.querySelectorAll('.gfiVentDimensions');
+    existing.forEach(el => parent.removeChild(el));
+
+    for (let i = 1; i <= number; i++) {
+        let child = document.createElement('div');
+        child.className = 'input-row gfiVentDimensions';
+
+        let onInputAttr = i === 1 ? `oninput="handleDisable('gfiVentNum','g-f-i-v-1-w','g-f-i-v-1-h')"` : '';
+        let id1 = i === 1 ? `id="g-f-i-v-1-w"` : '';
+        let id2 = i === 1 ? `id="g-f-i-v-1-h"` : '';
+
+        let htmlString = `
+            Vent ${i}:
+            <input ${onInputAttr} ${id1} type="number" placeholder="width" value="${inputValueL}" class="input-box">
+            <input ${onInputAttr} ${id2} type="number" placeholder="height" value="${inputValueH}" class="input-box">
+            <input type="number" placeholder="No.s" value="1" class="input-box">
+        `;
+
+        child.innerHTML = htmlString;
+        parent.appendChild(child);
+    }
+}
+
+
+}
+            
+                
+                
+
+let explanation = ``;
+
+function paintMaterialCalculation(inputData, calculationData) {
+    let unit = document.getElementById('unitSelect').value;
+    const snippetArea = document.getElementById('solutionTextAreaGroundFloor');
+    let externalWallThickness = document.getElementById('externalWallThickness').value
+    let internalWallThickness = document.getElementById('internalWallThickness').value
+    let unitSelectThick = document.getElementById('unitSelectThick').value
+
+    if(externalWallThickness<100 && unitSelectThick =='mm'){
+           document.getElementById('errorBoxExternalWall').innerText = 'Wall Thickness Cannot be smaller than 100 mm'
+    return
+        }
+    if(externalWallThickness<4 && unitSelectThick =='inches'){
+           document.getElementById('errorBoxExternalWall').innerText = 'Wall Thickness Cannot be smaller than 4 inches'
+    return
+        }
+    else{
+            document.getElementById('errorBoxExternalWall').innerText = ''
+     }
+
+      if(internalWallThickness<100 && unitSelectThick =='mm'){
+           document.getElementById('errorBoxInternalWall').innerText = 'Wall Thickness Cannot be smaller than 100 mm'
+    return
+        }
+    if(internalWallThickness<4 && unitSelectThick =='inches'){
+           document.getElementById('errorBoxInternalWall').innerText = 'Wall Thickness Cannot be smaller than 4 inches'
+    return
+        }
+    else{
+            document.getElementById('errorBoxInternalWall').innerText = ''
+     }
+
+    explanation = `<h3><b>Material Calculation Report</b></h3>`;
+
+    // EXTERNAL WALLS
+    explanation += `<h4><b>External Walls</b></h4>`;
+    inputData.externalWallData.wallData.forEach((wall, idx) => {
+        explanation += `Wall ${idx + 1}: Length = ${wall.length} ${unit}, Height = ${wall.height} ${unit}<br>`;
+        explanation += `Area = ${calculationData.wallsEx.areaOfWalls[idx].toFixed(2)} sq.${unit}<br><br>`;
+    });
+    explanation += `Total External Wall Area = ${calculationData.wallsEx.sumOfAreaOfWalls.toFixed(2)} sq.${unit}<br>`;
+    explanation += `Openings (Gates/Windows/Vents) = ${calculationData.openingScheduleExternalWall.totalArea.toFixed(2)} sq.${unit}<br>`;
+    explanation += `Net Area After Deductions = ${calculationData.mainWallEx.totalArea.toFixed(2)} sq.${unit}<br>`;
+    explanation += `Panels Required = ${calculationData.mainWallEx.totalArea.toFixed(2)} ÷ ${inputData.externalWallData.panelArea} = ${calculationData.mainWallEx.nosOfPanels.toFixed(2)} nos<br>`;
+    explanation += `<hr>`; 
+
+    // INTERNAL WALLS
+    explanation += `<h4><b>Internal Walls</b></h4>`;
+    inputData.internalWallData.wallData.forEach((wall, idx) => {
+        explanation += `Wall ${idx + 1}: Length = ${wall.length} ${unit}, Height = ${wall.height} ${unit}<br>`;
+        explanation += `Area = ${calculationData.wallsInt.areaOfWalls[idx].toFixed(2)} sq.${unit}<br><br>`;
+    });
+    explanation += `Total Internal Wall Area = ${calculationData.wallsInt.sumOfAreaOfWalls.toFixed(2)} sq.${unit}<br>`;
+    explanation += `Openings (Gates/Windows/Vents) = ${calculationData.openingScheduleInternalWall.totalArea.toFixed(2)} sq.${unit}<br>`;
+    explanation += `Net Area After Deductions = ${calculationData.mainWallInt.totalArea.toFixed(2)} sq.${unit}<br>`;
+    explanation += `Panels Required = ${calculationData.mainWallInt.totalArea.toFixed(2)} ÷ ${inputData.internalWallData.panelArea} = ${calculationData.mainWallInt.nosOfPanels.toFixed(2)} nos<br>`;
+    explanation += `<hr>`;
+
+    // GROUND FLOOR SLAB
+    explanation += `<h4><b>Ground Floor Slab</b></h4>`;
+    explanation += `Slab Area = ${calculationData.groundFloorSlab.slabArea.toFixed(2)} sq.${unit}<br>`;
+    explanation += `Deduction = ${calculationData.groundFloorSlab.deduction.toFixed(2)} sq.${unit}<br>`;
+    explanation += `Net Area After Deductions = ${calculationData.groundFloorSlab.totalArea.toFixed(2)} sq.${unit}<br>`;
+    explanation += `Panels Required = ${calculationData.groundFloorSlab.totalArea.toFixed(2)} ÷ ${calculationData.groundFloorSlab.panelArea.toFixed(2)} = ${calculationData.groundFloorSlab.nosOfPanels.toFixed(2)} nos<br>`;
+    explanation += `<hr>`;
+
+    // L-MESH
+    explanation += `<h4><b>L-MESH</b></h4>`;
+    explanation += `Corners: ${calculationData.lMesh.totalLengthCorners.toFixed(2)} ${unit}<br>`;
+    if(document.getElementById('roofCheckbox').checked == true){
+    explanation += `External Wall: ${calculationData.lMesh.totalLengthExternalWall.toFixed(2)} ${unit}<br>`;
+    explanation += `Internal Wall: ${calculationData.lMesh.totalLengthInternalWall.toFixed(2)} ${unit}<br>`;   
+    }
+    explanation += `Total Length L-MESH = ${calculationData.lMesh.totalLengthLMesh.toFixed(2)} ${unit}<br>`;
+    explanation += `Pieces Required = ${calculationData.lMesh.totalLengthLMesh.toFixed(2)} ÷ ${inputData.lMesh.length} = ${calculationData.lMesh.nosOfLMesh.toFixed(2)} nos<br>`;
+    explanation += `<hr>`;
+
+    // F-MESH (JOINTS AND OPENINGS)
+    explanation += `<h4><b>F-MESH</b></h4>`;
+    explanation += `Wall Length for Joints = ${calculationData.fMesh.totalLength.toFixed(2)} ${unit}<br>`;
+    explanation += `Total Length for Joints = ${calculationData.fMesh.totalLength.toFixed(2)} ${unit}<br>`;
+    explanation += `Pieces Required (Joints) = ${calculationData.fMesh.totalLength.toFixed(2)} ÷ ${inputData.fMesh.length} = ${calculationData.fMesh.nosJoints.toFixed(2)} nos<br>`;
+    explanation += `Pieces Required (Openings) = ${calculationData.fMesh.nosOpening.toFixed(2)} nos<br>`;
+    explanation += `<hr>`;
+
+    // U-MESH
+    explanation += `<h4><b>U-MESH</b></h4>`;
+    explanation += `Total Length for U-MESH (External Wall) = ${calculationData.openingScheduleExternalWall.totalUMesh.toFixed(2)} ${unit}<br>`;
+    explanation += `Total Length for U-MESH (Internal Wall) = ${calculationData.openingScheduleInternalWall.totalUMesh.toFixed(2)} ${unit}<br>`;
+    explanation += `<hr>`;
+
+    // FINAL SUMMARY
+    explanation += `<h3><b>Final Material Requirement Summary</b></h3>`;
+    explanation += `External Wall Panels: ${calculationData.mainWallEx.nosOfPanels.toFixed(2)} nos<br>`;
+    explanation += `Internal Wall Panels: ${calculationData.mainWallInt.nosOfPanels.toFixed(2)} nos<br>`;
+    explanation += `Ground Floor Slab Panels: ${calculationData.groundFloorSlab.nosOfPanels.toFixed(2)} nos<br>`;
+    explanation += `L-MESH: ${calculationData.lMesh.nosOfLMesh.toFixed(2)} nos<br>`;
+    explanation += `F-MESH (Joints): ${calculationData.fMesh.nosJoints.toFixed(2)} nos<br>`;
+    explanation += `F-MESH (Openings): ${calculationData.fMesh.nosOpening.toFixed(2)} nos<br>`;
+    explanation += `U-MESH (External Wall ${externalWallThickness} ${   unitSelectThick}): ${calculationData.uMesh.externalWall.toFixed(2)} nos<br>`;
+    explanation += `U-MESH (Internal Wall ${internalWallThickness} ${unitSelectThick}): ${calculationData.uMesh.internalWall.toFixed(2)} nos<br>`;
+
+    snippetArea.innerHTML = explanation;
+
+    // Enable download and contact elements
+    let downloadButton = document.getElementById('downloadButton');
+    downloadButton.disabled = false;
+    downloadButton.classList.remove('disabled');
+    document.getElementById('contactNo').classList.remove('disabled');
+    document.getElementById('mailId').classList.remove('disabled');
+    document.getElementById('companyAddress').classList.remove('disabled');
+}
+
+function downloadPdf() {
+
+    const contactNo = document.getElementById('contactNo').value.trim();
+    const mailId = document.getElementById('mailId').value.trim();
+    const companyAddress = document.getElementById('companyAddress').value.trim();
+    const errorBox = document.getElementById('error-box-input-data');
+
+    function validateInputs() {
+        let isValid = true;
+        if (!/^\d{10}$/.test(contactNo)) {
+            errorBox.innerText = 'Please enter a valid 10-digit Contact No.';
+            isValid = false;
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mailId)) {
+            errorBox.innerText = 'Please enter a valid email address.';
+            isValid = false;
+        } else if (companyAddress.length === 0) {
+            errorBox.innerText = 'Company address cannot be empty.';
+            isValid = false;
+        } else {
+            errorBox.innerText = '';
+        }
+        return isValid;
+    }
+
+    if (!validateInputs()) {
+        return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const pageCenter = doc.internal.pageSize.getWidth() / 2;
+    const pageWidth = doc.internal.pageSize.getWidth();
+    let y = 20;
+
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`Contact: ${contactNo}`, pageCenter, y, { align: 'center' });
+    y += 7;
+    doc.text(`Email: ${mailId}`, pageCenter, y, { align: 'center' });
+    y += 7;
+    doc.text(`Address: ${companyAddress}`, pageCenter, y, { align: 'center' });
+    y += 15;
+
+    const pdfText = explanation
+        .replace(/<hr\s*\/?>/gi, '\n---HR---\n')
+        .replace(/<h3><b>(.*?)<\/b><\/h3>/gi, '\n---H3---$1\n')
+        .replace(/<h4><b>(.*?)<\/b><\/h4>/gi, '\n---H4---$1\n')
+        .replace(/<br\s*\/?>/gi, '\n')
+        .replace(/<[^>]+>/g, '')
+        .replace(/÷/g, '÷')
+        .replace(/ /g, ' ');
+
+    const lines = pdfText.split('\n');
+
+    lines.forEach(line => {
+        const trimmedLine = line.trim();
+        if (trimmedLine.length === 0) return;
+
+
+        if (trimmedLine.startsWith('---H3---Final Material Requirement Summary')) {
+        doc.addPage();
+        y = 20;
+      }
+
+
+        if (y > 280) { 
+            doc.addPage();
+            y = 20;
+        }
+
+        if (trimmedLine.startsWith('---H3---')) {
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(14);
+            doc.text(trimmedLine.replace('---H3---', ''), 10, y);
+            y += 8;
+        } else if (trimmedLine.startsWith('---H4---')) {
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(12);
+            doc.text(trimmedLine.replace('---H4---', ''), 10, y);
+            y += 7;
+        } else if (trimmedLine === '---HR---') {
+            y += 2;
+            doc.setDrawColor(180, 180, 180); 
+            doc.line(10, y, pageWidth - 10, y); 
+            y += 6;
+        } else {
+            doc.setFont('courier', 'normal');
+            doc.setFontSize(10);
+            const wrappedLines = doc.splitTextToSize(trimmedLine, pageWidth - 20); 
+            wrappedLines.forEach(wLine => {
+                if (y > 280) {
+                    doc.addPage();
+                    y = 20;
+                }
+                doc.text(wLine, 10, y);
+                y += 5;
+            });
+        }
+    });
+
+    doc.save('Material-Calculation-Report.pdf');
 }

@@ -5,18 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DimensionsV2</title>
     <style>
+        *{
+            font-family: jost,sans-serif;
+        }
         .tab{
             height: 100%;
             width: 200px;
             display: flex;
             align-items: center;
             font-weight: 600;
-            font-size: large;
+            font-size: 16px;
+            color: rgb(41, 40, 40);
             justify-content: center;
-            border-right: 2px solid gray;
+            cursor: pointer;
+            border-right: 4px solid gray;
         }
+        
         .active-tab{
             background-color: white;
+            border-top: 7px solid rgb(252, 114, 64);
+            border-right: 0px solid gray;
+
         }
         .add-tab{
             height: 25px; 
@@ -31,6 +40,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            font-family: none;
         }
         .add-tab:hover{
             background-color:rgb(190, 190, 190);
@@ -51,6 +61,7 @@
             margin-left: 40%;
             cursor: pointer;
             user-select: none;
+            font-family: none;
         }
         .close-tab:hover{
             background-color:rgb(190, 190, 190);
@@ -71,57 +82,102 @@
             flex-direction: row;
             justify-content: space-between;
             height: fit-content;
-            width: 98%;
-            margin-top: 50px;
+            width: 93%;
+            margin-top: 20px;
+            margin-bottom: 50px; 
+            border-radius: 18px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            padding-top: 25px;
+            padding-bottom: 22px;
+            padding-left: 25px;
+            padding-right: 25px;
         }
         .input-fieldset{
             width: 500px;
         }
         .input-box{
-            width: 70px;
+            width: 50px;
         }
         .error-box{
             margin: 5px;
             color: red;
         }
         .solution-box{
-            width: 98%;
-            height: fit-content;
-            min-height: 500px;
+            display: flex;
+            flex-direction: column;
         }
         .submit-button{
             width: 150px;
-            height: 30px;
+            height: 40px;
             margin: 5px;
+            border-radius: 99px;
+            transition: 500ms;
+            background-color: orangered;
+            color: white;
+            cursor: pointer;
+            font-size: 95%;
+            font-weight: bold;
+        }
+        .submit-button:hover{
+            width: 150px;
+            height: 40px;
+            margin: 5px;
+            border-radius: 99px;
+            transition: 500ms;
+            background-color: black;
+            color: orangered;
+            cursor: pointer;
+            font-size: 95%;
+            font-weight: bold;
         }
         .text-area{
             width: 98%;
             height: fit-content;
             min-height: 500px;
             margin: 5px ;
+            border: none;
         }
-        
+        .disabled{
+            opacity: 0.5;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+       
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-</head>
-<body style="margin: 0;user-select: none;">
-    
-    <div style="display:flex; flex-direction:row; height:40px; min-width: 100%; width: fit-content; background-color: #E6E6E6; align-items: center;">
+    <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/jspdf-autotable@latest/dist/jspdf.plugin.autotable.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet"></head>
+    <body style="margin: 0;user-select: none;">
+        
+    <!-- <div style="display:flex;  flex-direction:row; height:40px; min-width: 100%; width: fit-content; background-color: #E6E6E6;  align-items: center;">
         <div id="tabRow" style="display:flex; flex-direction:row; height:40px; width: fit-content; background-color: #E6E6E6; align-items: center;" ><div id="ground-floor" class="tab active-tab" onclick="updateTab('ground-floor')">Ground Floor</div></div><div class="add-tab" onclick="addTab(event)">+</div>
-    </div>
+    </div> -->
     
     <div id="window-container" style="display: flex;  width: 100%; height: fit-content; min-height: 1000px; background-color: white;">
          <div id="ground-floor-window" class="window active-window">
-            
+            <label for="unitSelect" style="margin-top: 20px;">Select Unit:</label>
+                    <select id="unitSelect" name="unit">
+                    <option value="Feet">Feet</option>
+                    <option value="Meter">Meters</option>
+                    </select>
             <div id="inputContainer" class="input-container">
-
                 <div id="externalWallGroundFloor" class="input-fieldset">
-                  <fieldset><legend><strong>External Wall Data</strong></legend>
-
+                    
+                  <fieldset>
+                    
+                    <legend><strong>External Wall Data</strong></legend>
+                      &nbsp; <input type="number" min="100"  placeholder="Wall Thickness" id="externalWallThickness">
+                      <select id="unitSelectThick" name="unit">
+                    <option value="mm">mm</option>
+                    <option value="inches">inch</option>
+                    </select>
                      <fieldset id="gfeWalls"><legend>Dimensions of Walls : <select name="number" disabled id="gfeWallsNum" onchange="addInputFieldsGf('gfeWalls','gfeWallsNum')"><option value="1">1</option> <option value="2">2</option> <option value="3">3</option><option value="4">4</option> <option value="5">5</option> <option value="6">6</option><option value="7">7</option> <option value="8">8</option> <option value="9">9</option><option value="10">10</option></select></legend>
-                        <div class="input-row gfeWallsDimensions">Wall 1: <input oninput="handleDisable('gfeWallsNum','g-f-e-w-1-l','g-f-e-w-1-h')" type="number" id="g-f-e-w-1-l" placeholder="length" class="input-box"> <input oninput="handleDisable('gfeWallsNum','g-f-e-w-1-l','g-f-e-w-1-h')" type="number" id="g-f-e-w-1-h" placeholder="height" class="input-box">  </div> 
-                     </fieldset>
+                        <div class="input-row gfeWallsDimensions">Wall 1: <input oninput="handleDisable('gfeWallsNum','g-f-e-w-1-l','g-f-e-w-1-h')" type="number" id="g-f-e-w-1-l" placeholder="length" class="input-box"> <input oninput="handleDisable('gfeWallsNum','g-f-e-w-1-l','g-f-e-w-1-h')" type="number" id="g-f-e-w-1-h" placeholder="height" class="input-box"> 
+                     </div> 
+                    </fieldset>
 
                      <fieldset id="gfeGates"><legend>Dimensions of Doors : <select name="number" disabled id="gfeGatesNum" onchange="addInputFieldsGf('gfeGates','gfeGatesNum')" ><option value="1">1</option> <option value="2">2</option> <option value="3">3</option><option value="4">4</option> <option value="5">5</option> <option value="6">6</option><option value="7">7</option> <option value="8">8</option> <option value="9">9</option><option value="10">10</option></select></legend>
                        <div class="input-row gfeGatesDimensions">Door 1: <input oninput="handleDisable('gfeGatesNum','g-f-e-d-1-w','g-f-e-d-1-h')" type="number" id="g-f-e-d-1-w" placeholder="width" class="input-box"> <input oninput="handleDisable('gfeGatesNum','g-f-e-d-1-w','g-f-e-d-1-h')" class="input-box" type="number" id="g-f-e-d-1-h" placeholder="height"> <input type="number" placeholder="No.s" id="g-f-e-d-1-nos" value="" class="input-box"></div>
@@ -134,7 +190,7 @@
                      <fieldset id="gfeVent"><legend>Dimensions of Ventilation : <select name="number" disabled class="number-drop" id="gfeVentNum" onchange="addInputFieldsGf('gfeVent','gfeVentNum')"><option value="1">1</option> <option value="2">2</option> <option value="3">3</option><option value="4">4</option> <option value="5">5</option> <option value="6">6</option><option value="7">7</option> <option value="8">8</option> <option value="9">9</option><option value="10">10</option></select></legend>
                        <div class="input-row gfeVentDimensions">Vent 1: <input oninput="handleDisable('gfeVentNum','g-f-e-v-1-w','g-f-e-v-1-h')"  type="number" id="g-f-e-v-1-w" placeholder="width" class="input-box"> <input oninput="handleDisable('gfeVentNum','g-f-e-v-1-w','g-f-e-v-1-h')" type="number" id="g-f-e-v-1-h" placeholder="height" class="input-box"> <input type="number" placeholder="No.s" id="g-f-e-v-1-nos" class="input-box" value=""></div>
                      </fieldset>
-                     <fieldset id="gfePanelArea"><legend>Panel Area: </legend><input class="input-box" type="number" placeholder="area"></fieldset>
+                     <fieldset id="gfePanelArea"><legend>Panel Area: </legend><input class="input-box" type="number" placeholder="area" disabled value="38.75"></fieldset>
                     <div id="errorBoxExternalWall" class="error-box"></div>
                     </fieldset>
 
@@ -144,7 +200,7 @@
                        <fieldset><legend><strong>Internal Wall Data</strong></legend>
 
                          <fieldset id="gfiWalls"><legend>Dimensions of Walls : <select name="number" disabled id="gfiWallsNum" onchange="addInputFieldsGf('gfiWalls','gfiWallsNum')"><option value="1">1</option> <option value="2">2</option> <option value="3">3</option><option value="4">4</option> <option value="5">5</option> <option value="6">6</option><option value="7">7</option> <option value="8">8</option> <option value="9">9</option><option value="10">10</option></select></legend>
-                           <div class="input-row gfiWallsDimensions">Wall 1: <input oninput="handleDisable('gfiWallsNum','g-f-i-w-1-l','g-f-i-w-1-h')" type="number" id="g-f-i-w-1-l" placeholder="length" class="input-box"> <input oninput="handleDisable('gfiWallsNum','g-f-i-w-1-l','g-f-i-w-1-h')" type="number" id="g-f-i-w-1-h" placeholder="height" class="input-box"></div> 
+                           <div class="input-row gfiWallsDimensions">Wall 1: <input oninput="handleDisable('gfiWallsNum','g-f-i-w-1-l','g-f-i-w-1-h')" type="number" id="g-f-i-w-1-l" placeholder="length" class="input-box"> <input oninput="handleDisable('gfiWallsNum','g-f-i-w-1-l','g-f-i-w-1-h')" type="number" id="g-f-i-w-1-h" placeholder="height" class="input-box"> <input type="number" min="100" class="" placeholder="Wall Thickness" id="internalWallThickness" ></div> 
                          </fieldset>
 
                          <fieldset id="gfiGates"><legend>Dimensions of Doors : <select name="number" disabled id="gfiGatesNum" onchange="addInputFieldsGf('gfiGates','gfiGatesNum')"><option value="1">1</option> <option value="2">2</option> <option value="3">3</option><option value="4">4</option> <option value="5">5</option> <option value="6">6</option><option value="7">7</option> <option value="8">8</option> <option value="9">9</option><option value="10">10</option></select></legend>
@@ -159,7 +215,7 @@
                            <div class="input-row gfiVentDimensions">Vent 1: <input oninput="handleDisable('gfiVentNum','g-f-i-v-1-w','g-f-i-v-1-h')" type="number" id="g-f-i-v-1-w" placeholder="width" class="input-box"> <input oninput="handleDisable('gfiVentNum','g-f-i-v-1-w','g-f-i-v-1-h')" type="number" id="g-f-i-v-1-h" placeholder="height" class="input-box"> <input type="number" placeholder="No.s" id="g-f-i-v-1-nos" class="input-box" value=""></div>
                          </fieldset>
 
-                        <fieldset id="gfiPanelArea"><legend>Panel Area: </legend><input class="input-box" type="number" placeholder="area"></fieldset>
+                        <fieldset id="gfiPanelArea"><legend>Panel Area: </legend><input class="input-box" type="number" placeholder="area" disabled value="38.75"></fieldset>
 
                         <div id="errorBoxInternalWall" class="error-box"></div>
 
@@ -171,27 +227,31 @@
                    <fieldset><legend><strong>Other Data</strong></legend>
                         
                         <fieldset><legend>L-Mesh</legend>
-                          <fieldset><div class="input-row lMeshCorners">Corners: <input type="number" placeholder="No.s" value="" class="input-box"></div></fieldset> 
-                           <fieldset><div class="input-row lMeshExternalWall">Ext Wall: <input type="number" placeholder="No.s" value="" class="input-box"></div></fieldset>
-                           <fieldset><div class="input-row lMeshInternalWall">Int Wall: <input type="number" placeholder="No.s" value="" class="input-box"></div></fieldset>
-                           <fieldset><div class="input-row lMeshLength">Mesh: <input class="input-box" placeholder="length" type="number"></div></fieldset>
+                            <label>
+                            <input type="checkbox" id="roofCheckbox" onchange="roofStatus(this)"> Include Roof
+                            </label>
+
+                           <fieldset><div class="input-row lMeshExternalWall">Ext Wall: <input disabled value="0" type="number" placeholder="No.s" value="" class="input-box"></div></fieldset>
+                           <fieldset><div class="input-row lMeshInternalWall">Int Wall: <input disabled value="0" type="number" placeholder="No.s" value="" class="input-box"></div></fieldset>
+                            <fieldset><div class="input-row lMeshCorners">Corners: <input type="number" placeholder="No.s" value="" class="input-box"></div></fieldset> 
+                           <fieldset><div class="input-row lMeshLength">Mesh Length: &nbsp;&nbsp;&nbsp;<input class="input-box" placeholder="length" value="4" disabled type="number"></div></fieldset>
                         </fieldset>
 
                         <fieldset><legend>F-Mesh</legend>
-                           <div class="input-row fMeshLength" ><input type="number" placeholder="length" class="input-box"> <input type="number" placeholder="No.s" class="input-box"></div>
+                           <div class="input-row fMeshLength" >Mesh Length: <input type="number" placeholder="length" value="4" disabled class="input-box"> <input type="number" placeholder="No.s" class="input-box"></div>
                         </fieldset>
 
                        <fieldset><legend>Ground Floor Slab</legend>
                         <div class="groundFloorSlab">
                      <fieldset class="groundFloorSlabArea">
                        <div class="input-row">
-                         Slab Area: <input type="number" placeholder="area" class="input-box">
+                         Slab Area: &nbsp;<input type="number" placeholder="area" class="input-box"><br>
                          Deduction: <input type="number" placeholder="area" class="input-box">
                        </div>
                      </fieldset>
                      <fieldset class="groundFloorPanelArea">
                        <div class="input-row">
-                         Panel Area: <input type="number" class="input-box" placeholder="area">
+                         Panel Area: <input type="number" class="input-box" placeholder="area" disabled value="38.75">
                        </div>
                      </fieldset>
                    </div>
@@ -203,285 +263,21 @@
                 </div>
             
 
-               <script>
-
-                function addInputFieldsGf(parentId, dropDownId) {
-                    
-                   if (parentId === 'gfeWalls') {
-                    let inputValueL = document.getElementById('g-f-e-w-1-l').value;
-                    let inputValueH = document.getElementById('g-f-e-w-1-h').value;
-                    let number = parseInt(document.getElementById(dropDownId).value, 10);
-                    let parent = document.getElementById(parentId);
-
-                     const existing = parent.querySelectorAll('.gfeWallsDimensions');
-                    existing.forEach(el => parent.removeChild(el));
-
-                for (let i = 1; i <= number; i++) {
-                      let child = document.createElement('div');
-                    child.className = 'input-row gfeWallsDimensions';
-
-                    let onInputAttr = i === 1 ? `oninput="handleDisable('gfeWallsNum','g-f-e-w-1-l','g-f-e-w-1-h')"` : '';
-                    let id1 = i === 1 ? `id="g-f-e-w-1-l"` : '';
-                    let id2 = i === 1 ? `id="g-f-e-w-1-h"` : '';
-
-                    let htmlString = `
-                      Wall ${i}: 
-                     <input ${onInputAttr} ${id1} type="number" placeholder="length" value="${inputValueL}" class="input-box">
-                     <input ${onInputAttr} ${id2} type="number" placeholder="height" value="${inputValueH}" class="input-box">
-                    `;
-
-                    child.innerHTML = htmlString;
-                    parent.appendChild(child);
-                }
-
-                }    
-                
-                   if (parentId === 'gfeGates') {
-                   let inputValueW = document.getElementById('g-f-e-d-1-w').value;
-                   let inputValueH = document.getElementById('g-f-e-d-1-h').value;
-                   let number = parseInt(document.getElementById(dropDownId).value, 10);
-                   let parent = document.getElementById(parentId);
-
-                   const existing = parent.querySelectorAll('.gfeGatesDimensions');
-                   existing.forEach(el => parent.removeChild(el));
-
-                   for (let i = 1; i <= number; i++) {
-                       let child = document.createElement('div');
-                       child.className = 'input-row gfeGatesDimensions';
-
-                       let onInputAttr = i === 1 ? `oninput="handleDisable('gfeGatesNum','g-f-e-d-1-w','g-f-e-d-1-h')"` : '';
-                       let id1 = i === 1 ? `id="g-f-e-d-1-w"` : '';
-                       let id2 = i === 1 ? `id="g-f-e-d-1-h"` : '';
-
-                       let htmlString = `
-                            Gate ${i}: 
-                           <input ${onInputAttr} ${id1} type="number" placeholder="width" value="${inputValueW}" class="input-box">
-                           <input ${onInputAttr} ${id2} type="number" placeholder="height" value="${inputValueH}" class="input-box">
-                           <input type="number" placeholder="No.s" value="1" class="input-box">
-                        `;
-
-                           child.innerHTML = htmlString;
-                           parent.appendChild(child);
-                   }
-}
-
-                   if (parentId === 'gfeWindows') {
-                    let inputValueW = document.getElementById('g-f-e-win-1-w').value;
-                    let inputValueH = document.getElementById('g-f-e-win-1-h').value;
-                    let number = parseInt(document.getElementById(dropDownId).value, 10);
-                    let parent = document.getElementById(parentId);
-
-                    const existing = parent.querySelectorAll('.gfeWindowsDimensions');
-                    existing.forEach(el => parent.removeChild(el));
-
-                    for (let i = 1; i <= number; i++) {
-                        let child = document.createElement('div');
-                        child.className = 'input-row gfeWindowsDimensions';
-
-                        let onInputAttr = i === 1 ? `oninput="handleDisable('gfeWindowsNum','g-f-e-win-1-w','g-f-e-win-1-h')"` : '';
-                        let id1 = i === 1 ? `id="g-f-e-win-1-w"` : '';
-                        let id2 = i === 1 ? `id="g-f-e-win-1-h"` : '';
-
-                        let htmlString = `
-                            Win ${i}: 
-                            <input ${onInputAttr} ${id1} type="number" placeholder="width" value="${inputValueW}" class="input-box">
-                            <input ${onInputAttr} ${id2} type="number" placeholder="height" value="${inputValueH}" class="input-box">
-                            <input type="number" placeholder="No.s" value="1" class="input-box">
-                           `;
-
-                        child.innerHTML = htmlString;
-                        parent.appendChild(child);
-                    }
-                }
-
-                    if (parentId === 'gfeVent') {
-                    let inputValueW = document.getElementById('g-f-e-v-1-w').value;
-                    let inputValueH = document.getElementById('g-f-e-v-1-h').value;
-                    let number = parseInt(document.getElementById(dropDownId).value, 10);
-                    let parent = document.getElementById(parentId);
-
-                    const existing = parent.querySelectorAll('.gfeVentDimensions');
-                    existing.forEach(el => parent.removeChild(el));
-
-                    for (let i = 1; i <= number; i++) {
-                        let child = document.createElement('div');
-                        child.className = 'input-row gfeVentDimensions';
-
-                        let onInputAttr = i === 1 ? `oninput="handleDisable('gfeVentNum','g-f-e-v-1-w','g-f-e-v-1-h')"` : '';
-                        let id1 = i === 1 ? `id="g-f-e-v-1-w"` : '';
-                        let id2 = i === 1 ? `id="g-f-e-v-1-h"` : '';
-
-                        let htmlString = `
-                            Vent ${i}: 
-                            <input ${onInputAttr} ${id1} type="number" placeholder="width" value="${inputValueW}" class="input-box">
-                            <input ${onInputAttr} ${id2} type="number" placeholder="height" value="${inputValueH}" class="input-box">
-                            <input type="number" placeholder="No.s" value="1" class="input-box">
-                         `;
-
-                          child.innerHTML = htmlString;
-                          parent.appendChild(child);
-                     }
-                 }
-
-                   if (parentId === 'gfiWalls') {
-                      let inputValueL = document.getElementById('g-f-i-w-1-l').value;
-                      let inputValueH = document.getElementById('g-f-i-w-1-h').value;
-                      let number = parseInt(document.getElementById(dropDownId).value, 10);
-                      let parent = document.getElementById(parentId);
-
-                      const existing = parent.querySelectorAll('.gfiWallsDimensions');
-                      existing.forEach(el => parent.removeChild(el));
-
-                      for (let i = 1; i <= number; i++) {
-                          let child = document.createElement('div');
-                          child.className = 'input-row gfiWallsDimensions';
-
-                          let onInputAttr = i === 1 ? `oninput="handleDisable('gfiWallsNum','g-f-i-w-1-l','g-f-i-w-1-h')"` : '';
-                          let id1 = i === 1 ? `id="g-f-i-w-1-l"` : '';
-                          let id2 = i === 1 ? `id="g-f-i-w-1-h"` : '';
-
-                          let htmlString = `
-                              Wall ${i}:
-                              <input ${onInputAttr} ${id1} type="number" placeholder="length" value="${inputValueL}" class="input-box">
-                              <input ${onInputAttr} ${id2} type="number" placeholder="height" value="${inputValueH}" class="input-box">
-                          `;
-
-                          child.innerHTML = htmlString;
-                          parent.appendChild(child);
-                      }
-                  }
-
-                    if (parentId === 'gfiGates') {
-                    let inputValueL = document.getElementById('g-f-i-d-1-w').value;
-                    let inputValueH = document.getElementById('g-f-i-d-1-h').value;
-                    let number = parseInt(document.getElementById(dropDownId).value, 10);
-                    let parent = document.getElementById(parentId);
-
-                    const existing = parent.querySelectorAll('.gfiGatesDimensions');
-                    existing.forEach(el => parent.removeChild(el));
-
-                    for (let i = 1; i <= number; i++) {
-                        let child = document.createElement('div');
-                        child.className = 'input-row gfiGatesDimensions';
-
-                        let onInputAttr = i === 1 ? `oninput="handleDisable('gfiGatesNum','g-f-i-d-1-w','g-f-i-d-1-h')"` : '';
-                            let id1 = i === 1 ? `id="g-f-i-d-1-w"` : '';
-                            let id2 = i === 1 ? `id="g-f-i-d-1-h"` : '';
-
-                            let htmlString = `
-                                Door ${i}:
-                                <input ${onInputAttr} ${id1} type="number" placeholder="width" value="${inputValueL}" class="input-box">
-                                <input ${onInputAttr} ${id2} type="number" placeholder="height" value="${inputValueH}" class="input-box">
-                                <input type="number" placeholder="No.s" value="1" class="input-box">
-                                            `;
-
-                                        child.innerHTML = htmlString;
-                                            parent.appendChild(child);
-                                     }
-                            }
-
-                    if (parentId === 'gfiWindows') {
-                        let inputValueL = document.getElementById('g-f-i-win-1-w').value;
-                        let inputValueH = document.getElementById('g-f-i-win-1-h').value;
-                        let number = parseInt(document.getElementById(dropDownId).value, 10);
-                        let parent = document.getElementById(parentId);
-
-                        const existing = parent.querySelectorAll('.gfiWindowsDimensions');
-                        existing.forEach(el => parent.removeChild(el));
-
-                        for (let i = 1; i <= number; i++) {
-                            let child = document.createElement('div');
-                            child.className = 'input-row gfiWindowsDimensions';
-
-                            let onInputAttr = i === 1 ? `oninput="handleDisable('gfiWindowsNum','g-f-i-win-1-w','g-f-i-win-1-h')"` : '';
-                            let id1 = i === 1 ? `id="g-f-i-win-1-w"` : '';
-                            let id2 = i === 1 ? `id="g-f-i-win-1-h"` : '';
-
-                            let htmlString = `
-                                Win ${i}:
-                                <input ${onInputAttr} ${id1} type="number" placeholder="width" value="${inputValueL}" class="input-box">
-                                <input ${onInputAttr} ${id2} type="number" placeholder="height" value="${inputValueH}" class="input-box">
-                                <input type="number" placeholder="No.s" value="1" class="input-box">
-                            `;
-
-                            child.innerHTML = htmlString;
-                            parent.appendChild(child);
-                        }
-                    }
-
-                   if (parentId === 'gfiWindows') {
-                   let inputValueL = document.getElementById('g-f-i-win-1-w').value;
-                   let inputValueH = document.getElementById('g-f-i-win-1-h').value;
-                   let number = parseInt(document.getElementById(dropDownId).value, 10);
-                   let parent = document.getElementById(parentId);
-
-                   const existing = parent.querySelectorAll('.gfiWindowsDimensions');
-                   existing.forEach(el => parent.removeChild(el));
-
-                   for (let i = 1; i <= number; i++) {
-                       let child = document.createElement('div');
-                       child.className = 'input-row gfiWindowsDimensions';
-
-                       let onInputAttr = i === 1 ? `oninput="handleDisable('gfiWindowsNum','g-f-i-win-1-w','g-f-i-win-1-h')"` : '';
-                       let id1 = i === 1 ? `id="g-f-i-win-1-w"` : '';
-                       let id2 = i === 1 ? `id="g-f-i-win-1-h"` : '';
-
-                       let htmlString = `
-                           Win ${i}:
-                           <input ${onInputAttr} ${id1} type="number" placeholder="width" value="${inputValueL}" class="input-box">
-                           <input ${onInputAttr} ${id2} type="number" placeholder="height" value="${inputValueH}" class="input-box">
-                           <input type="number" placeholder="No.s" value="1" class="input-box">
-                       `;
-
-                       child.innerHTML = htmlString;
-                       parent.appendChild(child);
-                   }
-               }
-
-               if (parentId === 'gfiVent') {
-                   let inputValueL = document.getElementById('g-f-i-v-1-w').value;
-                   let inputValueH = document.getElementById('g-f-i-v-1-h').value;
-                   let number = parseInt(document.getElementById(dropDownId).value, 10);
-                   let parent = document.getElementById(parentId);
-
-                   const existing = parent.querySelectorAll('.gfiVentDimensions');
-                   existing.forEach(el => parent.removeChild(el));
-
-                   for (let i = 1; i <= number; i++) {
-                       let child = document.createElement('div');
-                       child.className = 'input-row gfiVentDimensions';
-
-                       let onInputAttr = i === 1 ? `oninput="handleDisable('gfiVentNum','g-f-i-v-1-w','g-f-i-v-1-h')"` : '';
-                       let id1 = i === 1 ? `id="g-f-i-v-1-w"` : '';
-                       let id2 = i === 1 ? `id="g-f-i-v-1-h"` : '';
-
-                       let htmlString = `
-                           Vent ${i}:
-                           <input ${onInputAttr} ${id1} type="number" placeholder="width" value="${inputValueL}" class="input-box">
-                           <input ${onInputAttr} ${id2} type="number" placeholder="height" value="${inputValueH}" class="input-box">
-                           <input type="number" placeholder="No.s" value="1" class="input-box">
-                       `;
-
-                       child.innerHTML = htmlString;
-                       parent.appendChild(child);
-                  }
-               }
-
-
-                }
-                
-                
-                </script>
+               
 
            </div>
-                   <button type="button" class="submit-button" onclick="collectDataGf()">Submit</button>
+            <button type="button" class="submit-button" onclick="collectDataGf()">Submit</button>
 
-          <div id="solutionContainer" class="solution-box">
-            <fieldset class="solution-box">
-                <button class="submit-button" onclick="downloadPdf()">Download PDF</button>
-                <pre class="text-area" id="solutionTextAreaGroundFloor">
-                </pre>
-            </fieldset>
+          <div id="solutionContainer" class="input-container solution-box">
+            
+            <div style="display: flex; flex-direction: row; align-items: center;"><button id="downloadButton" class="submit-button disabled" disabled onclick="downloadPdf()">Download PDF</button><div style="display: flex; flex-direction: row; gap: 10px;"></div>&nbsp;&nbsp;&nbsp;&nbsp; 
+            <input type="number" id="contactNo"  placeholder="Contact No" class="disabled">&nbsp;&nbsp;&nbsp;&nbsp; 
+            <input type="email" id="mailId" placeholder="Mail ID" class="disabled">&nbsp;&nbsp;&nbsp;&nbsp; 
+            <input type="text" id="companyAddress" placeholder="Company Address" class="disabled">
+            <div id="error-box-input-data" class="error-box"></div>
+            </div>
+                <div  class="text-area" id="solutionTextAreaGroundFloor" disabled>
+                </div>
           </div>
 
 
