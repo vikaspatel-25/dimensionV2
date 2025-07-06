@@ -158,11 +158,17 @@
     
     <div id="window-container" style="display: flex;  width: 100%; height: fit-content; min-height: 1000px; background-color: white;">
          <div id="ground-floor-window" class="window active-window">
-            <label for="unitSelect" style="margin-top: 20px;">Select Unit:</label>
+          
+                  <div style="display: flex; flex-direction: row; justify-content: space-between;margin-top: 20px; width: 90%;">
+                    <label for="unitSelect" style="margin-top: 10px;">Select Unit:
                     <select id="unitSelect" name="unit">
                     <option value="Feet">Feet</option>
                     <option value="Meter">Meters</option>
                     </select>
+                    </label>
+                    <button class="submit-button" onclick="reset()">Reset</button>
+                  </div>
+
             <div id="inputContainer" class="input-container">
                 <div id="externalWallGroundFloor" class="input-fieldset">
                     

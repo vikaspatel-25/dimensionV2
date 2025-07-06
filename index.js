@@ -77,12 +77,7 @@ function handleDisable(dropId,input1,input2){
           else return false;
 }
 
-(function(){
-  let allInputs = document.getElementsByClassName('input-box');
-  Array.from(allInputs).forEach((e)=>{
-    e.value = 100
-  })
-})();
+
 
 function calculateArea(height,width){
         return height*width;
@@ -1226,3 +1221,31 @@ function downloadPdf() {
 
     doc.save('Material-Calculation-Report.pdf');
 }
+
+function reset(){
+  let allInputs = document.getElementsByClassName('input-box');
+  Array.from(allInputs).forEach((e)=>{
+    if(e.disabled == false){
+        e.value = '';
+        explanation = ``;
+    }
+    const snippetArea = document.getElementById('solutionTextAreaGroundFloor');
+
+     snippetArea.innerHTML = explanation;
+
+    // Enable download and contact elements
+    let downloadButton = document.getElementById('downloadButton');
+    downloadButton.disabled = true;
+    downloadButton.classList.add('disabled');
+    document.getElementById('contactNo').classList.add('disabled');
+    document.getElementById('mailId').classList.add('disabled');
+    document.getElementById('companyAddress').classList.add('disabled');
+  })
+}
+
+// (function(){
+//     let allInputs = document.getElementsByClassName('input-box');
+//   Array.from(allInputs).forEach((e)=>{    
+//         e.value = 20;
+    
+// })})();
