@@ -1249,3 +1249,57 @@ function reset(){
 //         e.value = 20;
     
 // })})();
+
+function changeUnit(e){
+
+    let gfePanelAreaInputBox = document.getElementById('gfePanelAreaInputBox');
+    let gfiPanelAreaInputBox = document.getElementById('gfiPanelAreaInputBox');
+    let groundFloorPanelArea = document.getElementById('groundFloorPanelArea');
+    let lMeshLength = document.getElementById('lMeshLength');
+    let fMeshLength = document.getElementById('fMeshLength');
+
+   if(e.value == 'Feet'){
+    gfePanelAreaInputBox.value = '38.75';
+    gfiPanelAreaInputBox.value = '38.75';
+    groundFloorPanelArea.value   = '38.75';
+    lMeshLength.value = '4';
+    fMeshLength.value = '4';
+   }
+   if(e.value == 'Meter'){
+    gfePanelAreaInputBox.value = '3.6';
+    gfiPanelAreaInputBox.value = '3.6';
+    groundFloorPanelArea.value = '3.6';
+    lMeshLength.value = '1.2';
+    fMeshLength.value = '1.2';
+   }
+
+}
+
+function fillZero(e,id){
+    let section = document.getElementById(id);
+    if(e.checked == true){
+        let inputBoxes = section.getElementsByClassName('input-box');
+        Array.from(inputBoxes).forEach((e)=>{
+            if(e.disabled == false){
+                if(e.getAttribute('min')){
+                   e.value = e.getAttribute('min');
+                }else{
+                e.value =0;
+                }
+            }
+        })
+    }
+    if(e.checked == false){
+        let inputBoxes = section.getElementsByClassName('input-box');
+        Array.from(inputBoxes).forEach((e)=>{
+            if(e.disabled == false){
+                if(e.getAttribute('min')){
+                   e.value = '';
+                }else{
+                e.value = '';
+                }
+               
+            }
+        })
+    }
+}

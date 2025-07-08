@@ -161,7 +161,7 @@
           
                   <div style="display: flex; flex-direction: row; justify-content: space-between;margin-top: 20px; width: 90%;">
                     <label for="unitSelect" style="margin-top: 10px;">Select Unit:
-                    <select id="unitSelect" name="unit">
+                    <select id="unitSelect" name="unit" onchange="changeUnit(this)">
                     <option value="Feet">Feet</option>
                     <option value="Meter">Meters</option>
                     </select>
@@ -174,8 +174,8 @@
                     
                   <fieldset>
                     
-                    <legend><strong>External Wall Data</strong></legend>
-                      &nbsp; <input type="number" min="100"  placeholder="Wall Thickness" id="externalWallThickness">
+                    <legend><strong>External Wall Data</strong>&nbsp;&nbsp; Disable :<input type="checkbox" name="" onclick="fillZero(this,'externalWallGroundFloor')"></legend>
+                      &nbsp; <input type="number" min="100" class="input-box" style="width: fit-content;" placeholder="Wall Thickness" id="externalWallThickness">
                       <select id="unitSelectThick" name="unit">
                     <option value="mm">mm</option>
                     <option value="inches">inch</option>
@@ -196,17 +196,17 @@
                      <fieldset id="gfeVent"><legend>Dimensions of Ventilation : <select name="number" disabled class="number-drop" id="gfeVentNum" onchange="addInputFieldsGf('gfeVent','gfeVentNum')"><option value="1">1</option> <option value="2">2</option> <option value="3">3</option><option value="4">4</option> <option value="5">5</option> <option value="6">6</option><option value="7">7</option> <option value="8">8</option> <option value="9">9</option><option value="10">10</option></select></legend>
                        <div class="input-row gfeVentDimensions">Vent 1: <input oninput="handleDisable('gfeVentNum','g-f-e-v-1-w','g-f-e-v-1-h')"  type="number" id="g-f-e-v-1-w" placeholder="width" class="input-box"> <input oninput="handleDisable('gfeVentNum','g-f-e-v-1-w','g-f-e-v-1-h')" type="number" id="g-f-e-v-1-h" placeholder="height" class="input-box"> <input type="number" placeholder="No.s" id="g-f-e-v-1-nos" class="input-box" value=""></div>
                      </fieldset>
-                     <fieldset id="gfePanelArea"><legend>Panel Area: </legend><input class="input-box" type="number" placeholder="area" disabled value="38.75"></fieldset>
+                     <fieldset id="gfePanelArea"><legend>Panel Area: </legend><input id="gfePanelAreaInputBox" class="input-box" type="number" placeholder="area" disabled value="38.75"></fieldset>
                     <div id="errorBoxExternalWall" class="error-box"></div>
                     </fieldset>
 
                 </div>
 
                 <div id="internal-wall-ground-floor" class="input-fieldset">
-                       <fieldset><legend><strong>Internal Wall Data</strong></legend>
-
+                       <fieldset><legend><strong>Internal Wall Data</strong>&nbsp;&nbsp; Disable :<input type="checkbox" name="" onclick="fillZero(this,'internal-wall-ground-floor')"></legend>
+                        <input type="number" min="100" class="input-box" style="width: fit-content;" placeholder="Wall Thickness" id="internalWallThickness" >
                          <fieldset id="gfiWalls"><legend>Dimensions of Walls : <select name="number" disabled id="gfiWallsNum" onchange="addInputFieldsGf('gfiWalls','gfiWallsNum')"><option value="1">1</option> <option value="2">2</option> <option value="3">3</option><option value="4">4</option> <option value="5">5</option> <option value="6">6</option><option value="7">7</option> <option value="8">8</option> <option value="9">9</option><option value="10">10</option></select></legend>
-                           <div class="input-row gfiWallsDimensions">Wall 1: <input oninput="handleDisable('gfiWallsNum','g-f-i-w-1-l','g-f-i-w-1-h')" type="number" id="g-f-i-w-1-l" placeholder="length" class="input-box"> <input oninput="handleDisable('gfiWallsNum','g-f-i-w-1-l','g-f-i-w-1-h')" type="number" id="g-f-i-w-1-h" placeholder="height" class="input-box"> <input type="number" min="100" class="" placeholder="Wall Thickness" id="internalWallThickness" ></div> 
+                           <div class="input-row gfiWallsDimensions">Wall 1: <input oninput="handleDisable('gfiWallsNum','g-f-i-w-1-l','g-f-i-w-1-h')" type="number" id="g-f-i-w-1-l" placeholder="length" class="input-box"> <input oninput="handleDisable('gfiWallsNum','g-f-i-w-1-l','g-f-i-w-1-h')" type="number" id="g-f-i-w-1-h" placeholder="height" class="input-box"></div> 
                          </fieldset>
 
                          <fieldset id="gfiGates"><legend>Dimensions of Doors : <select name="number" disabled id="gfiGatesNum" onchange="addInputFieldsGf('gfiGates','gfiGatesNum')"><option value="1">1</option> <option value="2">2</option> <option value="3">3</option><option value="4">4</option> <option value="5">5</option> <option value="6">6</option><option value="7">7</option> <option value="8">8</option> <option value="9">9</option><option value="10">10</option></select></legend>
@@ -221,7 +221,7 @@
                            <div class="input-row gfiVentDimensions">Vent 1: <input oninput="handleDisable('gfiVentNum','g-f-i-v-1-w','g-f-i-v-1-h')" type="number" id="g-f-i-v-1-w" placeholder="width" class="input-box"> <input oninput="handleDisable('gfiVentNum','g-f-i-v-1-w','g-f-i-v-1-h')" type="number" id="g-f-i-v-1-h" placeholder="height" class="input-box"> <input type="number" placeholder="No.s" id="g-f-i-v-1-nos" class="input-box" value=""></div>
                          </fieldset>
 
-                        <fieldset id="gfiPanelArea"><legend>Panel Area: </legend><input class="input-box" type="number" placeholder="area" disabled value="38.75"></fieldset>
+                        <fieldset id="gfiPanelArea"><legend>Panel Area: </legend><input id="gfiPanelAreaInputBox" class="input-box" type="number" placeholder="area" disabled value="38.75"></fieldset>
 
                         <div id="errorBoxInternalWall" class="error-box"></div>
 
@@ -230,7 +230,7 @@
 
 
                 <div id="other-data-ground-floor" class="input-fieldset">
-                   <fieldset><legend><strong>Other Data</strong></legend>
+                   <fieldset><legend><strong>Other Data</strong> &nbsp;&nbsp;Disable :<input type="checkbox" name="" onclick="fillZero(this,'other-data-ground-floor')"></legend>
                         
                         <fieldset><legend>L-Mesh</legend>
                             <label>
@@ -240,11 +240,11 @@
                            <fieldset><div class="input-row lMeshExternalWall">Ext Wall: <input disabled value="0" type="number" placeholder="No.s" value="" class="input-box"></div></fieldset>
                            <fieldset><div class="input-row lMeshInternalWall">Int Wall: <input disabled value="0" type="number" placeholder="No.s" value="" class="input-box"></div></fieldset>
                             <fieldset><div class="input-row lMeshCorners">Corners: <input type="number" placeholder="No.s" value="" class="input-box"></div></fieldset> 
-                           <fieldset><div class="input-row lMeshLength">Mesh Length: &nbsp;&nbsp;&nbsp;<input class="input-box" placeholder="length" value="4" disabled type="number"></div></fieldset>
+                           <fieldset><div class="input-row lMeshLength">Mesh Length: &nbsp;&nbsp;&nbsp;<input id="lMeshLength" class="input-box" placeholder="length" value="4" disabled type="number"></div></fieldset>
                         </fieldset>
 
                         <fieldset><legend>F-Mesh</legend>
-                           <div class="input-row fMeshLength" >Mesh Length: <input type="number" placeholder="length" value="4" disabled class="input-box"> <input type="number" placeholder="No.s" class="input-box"></div>
+                           <div class="input-row fMeshLength" >Mesh Length: <input id="fMeshLength" type="number" placeholder="length" value="4" disabled class="input-box"> <input type="number" placeholder="No.s" class="input-box"></div>
                         </fieldset>
 
                        <fieldset><legend>Ground Floor Slab</legend>
@@ -257,7 +257,7 @@
                      </fieldset>
                      <fieldset class="groundFloorPanelArea">
                        <div class="input-row">
-                         Panel Area: <input type="number" class="input-box" placeholder="area" disabled value="38.75">
+                         Panel Area: <input type="number" id="groundFloorPanelArea" class="input-box" placeholder="area" disabled value="38.75">
                        </div>
                      </fieldset>
                    </div>
