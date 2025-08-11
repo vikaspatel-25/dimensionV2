@@ -72,6 +72,64 @@ function handleDisable(dropId,input1,input2){
                 // }
 }
 
+function updateMeshLength(){
+    let unit = document.getElementById('unitSelect').value;
+    document.getElementById('fMeshSides').value = 0;
+
+    let gfeWallsDimensionsList = document.getElementsByClassName('gfeWallsDimensions');
+    let gfeWallsDimensions = [];
+
+    for (let e of gfeWallsDimensionsList) {
+        let inputs = e.getElementsByTagName('input');
+        let length = inputs[0].value;
+
+        if (length.trim() === '' || checkInvalidData(length)) {
+            continue; // skip this wall if empty or invalid
+        }
+
+        gfeWallsDimensions.push({
+            length: parseFloat(inputs[0].value) || 0,
+            height: parseFloat(inputs[1].value) || 0
+        });
+    }
+
+    let gfiWallsDimensionsList = document.getElementsByClassName('gfiWallsDimensions');
+    let gfiWallsDimensions = [];
+
+    for (let e of gfiWallsDimensionsList) {
+        let inputs = e.getElementsByTagName('input');
+        let length = inputs[0].value;
+
+        if (length.trim() === '' || checkInvalidData(length)) {
+            continue; // skip if empty or invalid
+        }
+
+        gfiWallsDimensions.push({
+            length: parseFloat(inputs[0].value) || 0,
+            height: parseFloat(inputs[1].value) || 0
+        });
+    }
+
+    let threshold = unit === 'Feet' ? 10 : unit === 'Meter' ? 3 : Infinity;
+
+    let anyLengthExceeds = [...gfeWallsDimensions, ...gfiWallsDimensions]
+        .some(wall => wall.length >= threshold);
+
+    let sumOfLengthOfWallsEx = gfeWallsDimensions.reduce((acc, wall) => acc + wall.length, 0);
+    let sumOfLengthOfWallsIn = gfiWallsDimensions.reduce((acc, wall) => acc + wall.length, 0);
+    let totalLength = sumOfLengthOfWallsEx + sumOfLengthOfWallsIn;
+
+    if (
+        anyLengthExceeds ||
+        sumOfLengthOfWallsEx >= threshold ||
+        sumOfLengthOfWallsIn >= threshold ||
+        totalLength >= threshold
+    ) {
+        document.getElementById('fMeshSides').value = 2;
+    }
+}
+
+
 
 function roofStatus(e) {
 
@@ -79,8 +137,12 @@ let lMeshExternalWall = document.querySelectorAll('.lMeshExternalWall input');
 let lMeshInternalWall = document.querySelectorAll('.lMeshInternalWall input');
 
 if (e.checked) {
-    lMeshExternalWall.forEach(input => input.disabled = false);
-    lMeshInternalWall.forEach(input => input.disabled = false);
+    lMeshExternalWall.forEach(input => { input.disabled = false;
+            input.value = 1.50;
+    });
+    lMeshInternalWall.forEach(input => {input.disabled = false;
+            input.value = 2;
+    });
 } else {
     lMeshExternalWall.forEach(input => {
     input.disabled = true;
@@ -109,12 +171,12 @@ function addInputFieldsGf(parentId, dropDownId) {
             for (let i = 1; i <= number; i++) {
                 let child = document.createElement('div');
                 child.className = 'input-row gfeWallsDimensions';
-                let onInputAttr = i === 1 ? `oninput="handleDisable('gfeWallsNum','g-f-e-w-1-l','g-f-e-w-1-h')"` : '';
+                let onInputAttr =  `oninput="handleDisable('gfeWallsNum','g-f-e-w-1-l','g-f-e-w-1-h');updateMeshLength();"`;
                 let id1 = i === 1 ? `id="g-f-e-w-1-l"` : '';
                 let id2 = i === 1 ? `id="g-f-e-w-1-h"` : '';
                 child.innerHTML = `
                     Wall ${i}: 
-                    <input ${onInputAttr} ${id1} type="number" placeholder="length" value="${inputValueL}" class="input-box">
+                    <input ${onInputAttr} ${id1} onchange="updateMeshLength();" type="number" placeholder="length" value="${inputValueL}" class="input-box">
                     <input ${onInputAttr} ${id2} type="number" placeholder="height" value="${inputValueH}" class="input-box">
                 `;
                 parent.appendChild(child);
@@ -128,12 +190,12 @@ function addInputFieldsGf(parentId, dropDownId) {
             for (let i = 1; i <= number; i++) {
                 let child = document.createElement('div');
                 child.className = 'input-row gfeWallsDimensions';
-                let onInputAttr = i === 1 ? `oninput="handleDisable('gfeWallsNum','g-f-e-w-1-l','g-f-e-w-1-h')"` : '';
+                let onInputAttr = `oninput="handleDisable('gfeWallsNum','g-f-e-w-1-l','g-f-e-w-1-h');updateMeshLength();"`;
                 let id1 = i === 1 ? `id="g-f-e-w-1-l"` : '';
                 let id2 = i === 1 ? `id="g-f-e-w-1-h"` : '';
                 child.innerHTML = `
                     Wall ${i}: 
-                    <input ${onInputAttr} ${id1} type="number" placeholder="length" value="${inputValueL}" class="input-box">
+                    <input ${onInputAttr} ${id1} type="number" onchange="updateMeshLength();" placeholder="length" value="${inputValueL}" class="input-box">
                     <input ${onInputAttr} ${id2} type="number" placeholder="height" value="${inputValueH}" class="input-box">
                 `;
                 parent.appendChild(child);
@@ -294,13 +356,13 @@ function addInputFieldsGf(parentId, dropDownId) {
             for (let i = 1; i <= number; i++) {
                 let child = document.createElement('div');
                 child.className = 'input-row gfiWallsDimensions';
-                let onInputAttr = i === 1 ? `oninput="handleDisable('gfiWallsNum','g-f-i-w-1-l','g-f-i-w-1-h')"` : '';
+                let onInputAttr =  `oninput="handleDisable('gfiWallsNum','g-f-i-w-1-l','g-f-i-w-1-h');updateMeshLength();"`
                 let id1 = i === 1 ? `id="g-f-i-w-1-l"` : '';
                 let id2 = i === 1 ? `id="g-f-i-w-1-h"` : '';
                 child.innerHTML = `
                     Wall ${i}:
-                    <input ${onInputAttr} ${id1} type="number" placeholder="length" value="${inputValueL}" class="input-box">
-                    <input ${onInputAttr} ${id2} type="number" placeholder="height" value="${inputValueH}" class="input-box">
+                    <input ${onInputAttr} ${id1} type="number" onchange="updateMeshLength()"; placeholder="length" value="${inputValueL}" class="input-box">
+                    <input ${onInputAttr} ${id2} type="number"  placeholder="height" value="${inputValueH}" class="input-box">
                 `;
                 parent.appendChild(child);
             }
@@ -312,12 +374,12 @@ function addInputFieldsGf(parentId, dropDownId) {
             for (let i = 1; i <= number; i++) {
                 let child = document.createElement('div');
                 child.className = 'input-row gfiWallsDimensions';
-                let onInputAttr = i === 1 ? `oninput="handleDisable('gfiWallsNum','g-f-i-w-1-l','g-f-i-w-1-h')"` : '';
+                let onInputAttr = `oninput="handleDisable('gfiWallsNum','g-f-i-w-1-l','g-f-i-w-1-h');updateMeshLength();"`;
                 let id1 = i === 1 ? `id="g-f-i-w-1-l"` : '';
                 let id2 = i === 1 ? `id="g-f-i-w-1-h"` : '';
                 child.innerHTML = `
                     Wall ${i}:
-                    <input ${onInputAttr} ${id1} type="number" placeholder="length" value="${inputValueL}" class="input-box">
+                    <input ${onInputAttr} ${id1} type="number" onchange="updateMeshLength()"; placeholder="length" value="${inputValueL}" class="input-box">
                     <input ${onInputAttr} ${id2} type="number" placeholder="height" value="${inputValueH}" class="input-box">
                 `;
                 parent.appendChild(child);
@@ -1119,27 +1181,39 @@ function paintMaterialCalculation(inputData, calculationData) {
     let internalWallThickness = document.getElementById('internalWallThickness').value;
     let unitSelectThickIn = document.getElementById('unitSelectThickIn').value;
     let unitSelectThickEx = document.getElementById('unitSelectThickEx').value;
+    let unitSelectThickSlb = document.getElementById('unitSelectThickSlb').value;
+    let slabThickness = document.getElementById('slabThickness').value;
 
-    if (externalWallThickness < 80 && unitSelectThickEx == 'mm') {
-        document.getElementById('errorBoxExternalWall').innerText = 'Wall Thickness Cannot be smaller than 100 mm';
+    if ((externalWallThickness < 100 || externalWallThickness > 310)  && unitSelectThickEx == 'mm') {
+        document.getElementById('errorBoxExternalWall').innerText = 'Wall Thickness Cannot be smaller than 100mm or greater than 310mm';
         return;
     }
-    if (externalWallThickness < 4 && unitSelectThickEx == 'inches') {
-        document.getElementById('errorBoxExternalWall').innerText = 'Wall Thickness Cannot be smaller than 4 inches';
+    if ((externalWallThickness < 4 || externalWallThickness > 12) && unitSelectThickEx == 'inches') {
+        document.getElementById('errorBoxExternalWall').innerText = 'Wall Thickness Cannot be smaller than 4 inches or greater than 12 inches';
         return;
     } else {
         document.getElementById('errorBoxExternalWall').innerText = '';
     }
 
-    if (internalWallThickness < 80 && unitSelectThickIn == 'mm') {
-        document.getElementById('errorBoxInternalWall').innerText = 'Wall Thickness Cannot be smaller than 100 mm';
+    if ((internalWallThickness < 100 || internalWallThickness > 310) && unitSelectThickIn == 'mm') {
+        document.getElementById('errorBoxInternalWall').innerText = 'Wall Thickness Cannot be smaller than 100mm or greater than 310mm';
         return;
     }
-    if (internalWallThickness < 4 && unitSelectThickIn == 'inches') {
-        document.getElementById('errorBoxInternalWall').innerText = 'Wall Thickness Cannot be smaller than 4 inches';
+    if ((internalWallThickness < 4 || internalWallThickness > 12) && unitSelectThickIn == 'inches') {
+        document.getElementById('errorBoxInternalWall').innerText = 'Wall Thickness Cannot be smaller than 4 inches or greater than 12 inches';
         return;
     } else {
         document.getElementById('errorBoxInternalWall').innerText = '';
+    }
+    if ((slabThickness < 100 || slabThickness > 310) && unitSelectThickSlb == 'mm') {
+        document.getElementById('errorBoxOtherData').innerText = 'Slab Thickness Cannot be smaller than 100mm or greater than 310mm';
+        return;
+    }
+    if ((slabThickness < 4 || slabThickness > 12) && unitSelectThickSlb == 'inches') {
+        document.getElementById('errorBoxOtherData').innerText = 'Slab Thickness Cannot be smaller than 4 inches or greater than 12 inches';
+        return;
+    } else {
+        document.getElementById('errorBoxOtherData').innerText = '';
     }
 
     let explanation = `<h3><b>Material Calculation Report</b></h3>`;
@@ -1226,7 +1300,7 @@ function paintMaterialCalculation(inputData, calculationData) {
         explanation += `Internal Wall Panels: ${calculationData.mainWallInt.nosOfPanels.toFixed(2)} nos<br>`;
     }
     if (calculationData.groundFloorSlab.nosOfPanels > 0) {
-        explanation += `Ground Floor Slab Panels: ${calculationData.groundFloorSlab.nosOfPanels.toFixed(2)} nos<br>`;
+        explanation += `Ground Floor Slab (${slabThickness} ${unitSelectThickSlb}): ${calculationData.groundFloorSlab.nosOfPanels.toFixed(2)} nos<br>`;
     }
     if (calculationData.lMesh.nosOfLMesh > 0) {
         explanation += `L-MESH: ${calculationData.lMesh.nosOfLMesh.toFixed(2)} nos<br>`;

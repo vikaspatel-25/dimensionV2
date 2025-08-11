@@ -182,7 +182,7 @@
                     <option value="inches">inch</option>
                     </select>
                      <fieldset id="gfeWalls"><legend>Dimensions of Walls : <select name="number"  id="gfeWallsNum" onchange="addInputFieldsGf('gfeWalls','gfeWallsNum')"><option value="0">0</option><option selected value="1">1</option> <option value="2">2</option> <option value="3">3</option><option value="4">4</option> <option value="5">5</option> <option value="6">6</option><option value="7">7</option> <option value="8">8</option> <option value="9">9</option><option value="10">10</option></select></legend>
-                        <div class="input-row gfeWallsDimensions">Wall 1: <input oninput="handleDisable('gfeWallsNum','g-f-e-w-1-l','g-f-e-w-1-h')" type="number" id="g-f-e-w-1-l" placeholder="length" class="input-box"> <input oninput="handleDisable('gfeWallsNum','g-f-e-w-1-l','g-f-e-w-1-h')" type="number" id="g-f-e-w-1-h" placeholder="height" class="input-box"> 
+                        <div class="input-row gfeWallsDimensions">Wall 1: <input onchange="updateMeshLength();" oninput="handleDisable('gfeWallsNum','g-f-e-w-1-l','g-f-e-w-1-h'); updateMeshLength()" type="number" id="g-f-e-w-1-l" placeholder="length" class="input-box"> <input oninput="handleDisable('gfeWallsNum','g-f-e-w-1-l','g-f-e-w-1-h')" type="number" id="g-f-e-w-1-h" placeholder="height" class="input-box"> 
                      </div> 
                     </fieldset>
 
@@ -211,7 +211,7 @@
                           <option value="inches">inch</option>
                          </select>
                         <fieldset id="gfiWalls"><legend>Dimensions of Walls : <select name="number"  id="gfiWallsNum" onchange="addInputFieldsGf('gfiWalls','gfiWallsNum')"><option value="0">0</option><option selected value="1">1</option> <option value="2">2</option> <option value="3">3</option><option value="4">4</option> <option value="5">5</option> <option value="6">6</option><option value="7">7</option> <option value="8">8</option> <option value="9">9</option><option value="10">10</option></select></legend>
-                           <div class="input-row gfiWallsDimensions">Wall 1: <input oninput="handleDisable('gfiWallsNum','g-f-i-w-1-l','g-f-i-w-1-h')" type="number" id="g-f-i-w-1-l" placeholder="length" class="input-box"> <input oninput="handleDisable('gfiWallsNum','g-f-i-w-1-l','g-f-i-w-1-h')" type="number" id="g-f-i-w-1-h" placeholder="height" class="input-box"></div> 
+                           <div class="input-row gfiWallsDimensions">Wall 1: <input onchange="updateMeshLength();" oninput="handleDisable('gfiWallsNum','g-f-i-w-1-l','g-f-i-w-1-h'); updateMeshLength();" type="number" id="g-f-i-w-1-l" placeholder="length" class="input-box"> <input oninput="handleDisable('gfiWallsNum','g-f-i-w-1-l','g-f-i-w-1-h')" type="number" id="g-f-i-w-1-h" placeholder="height" class="input-box"></div> 
                          </fieldset>
 
                          <fieldset id="gfiGates"><legend>Dimensions of Doors : <select name="number"  id="gfiGatesNum" onchange="addInputFieldsGf('gfiGates','gfiGatesNum')"><option value="0">0</option><option selected value="1">1</option> <option value="2">2</option> <option value="3">3</option><option value="4">4</option> <option value="5">5</option> <option value="6">6</option><option value="7">7</option> <option value="8">8</option> <option value="9">9</option><option value="10">10</option></select></legend>
@@ -249,16 +249,22 @@
                         </fieldset>
 
                         <fieldset><legend>F-Mesh</legend>
-                           <div class="input-row fMeshLength" >Mesh Length: <input id="fMeshLength" type="number" placeholder="length" value="4" disabled class="input-box"> <input type="number" placeholder="Sides" class="input-box"></div>
+                           <div class="input-row fMeshLength" >Mesh Length: <input id="fMeshLength" type="number" placeholder="length" value="4" disabled class="input-box"> <input type="number" id="fMeshSides" placeholder="Sides" class="input-box"></div>
                         </fieldset>
 
                        <fieldset><legend>Ground Floor Slab</legend>
                         <div class="groundFloorSlab">
                      <fieldset class="groundFloorSlabArea">
-                       <div class="input-row">
-                         Slab Area: &nbsp;<input type="number" placeholder="area" class="input-box"><br>
+                       <div class="input-row"><input type="number" min="100" class="input-box" style="width: fit-content;  margin-bottom: 5px;" placeholder="Slab Thickness" id="slabThickness" >
+                         <select id="unitSelectThickSlb" name="unit">
+                       <option value="mm">mm</option>
+                       <option value="inches">inch</option>
+                       </select><br>
+                         Slab Area: &nbsp;<input type="number" placeholder="area" class="input-box">&nbsp;&nbsp;
+                        <br>
                          Deduction: <input type="number" placeholder="area" class="input-box">
                        </div>
+                        
                      </fieldset>
                      <fieldset class="groundFloorPanelArea">
                        <div class="input-row">
