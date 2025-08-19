@@ -837,8 +837,8 @@ function collectDataGf() {
     let groundFloorSlabData = {};
 
     let slabInputs = document.querySelector('.groundFloorSlabArea').getElementsByTagName('input');
-    let slabAreaValue = slabInputs[0].value;
-    let slabDeductionValue = slabInputs[1].value;
+    let slabAreaValue = slabInputs[1].value;
+    let slabDeductionValue = slabInputs[2].value;
 
     if (checkInvalidData(slabAreaValue)) {
         document.getElementById('errorBoxOtherData').innerText = 'Invalid Slab Area in Ground Floor Slab section';
