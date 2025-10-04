@@ -113,7 +113,7 @@ function updateMeshLength(){
     let threshold = unit === 'Feet' ? 10 : unit === 'Meter' ? 3 : Infinity;
 
     let anyLengthExceeds = [...gfeWallsDimensions, ...gfiWallsDimensions]
-        .some(wall => wall.length >= threshold);
+        .some(wall => wall.length > threshold);
 
     let sumOfLengthOfWallsEx = gfeWallsDimensions.reduce((acc, wall) => acc + wall.length, 0);
     let sumOfLengthOfWallsIn = gfiWallsDimensions.reduce((acc, wall) => acc + wall.length, 0);
@@ -121,9 +121,9 @@ function updateMeshLength(){
 
     if (
         anyLengthExceeds ||
-        sumOfLengthOfWallsEx >= threshold ||
-        sumOfLengthOfWallsIn >= threshold ||
-        totalLength >= threshold
+        sumOfLengthOfWallsEx > threshold ||
+        sumOfLengthOfWallsIn > threshold ||
+        totalLength > threshold
     ) {
         wallLength = true;
         document.getElementById('fMeshSides').value = 2;
