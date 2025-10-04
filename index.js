@@ -71,7 +71,7 @@ function handleDisable(dropId,input1,input2){
                 // dropDownBox.disabled = true;
                 // }
 }
-
+let wallLength;
 function updateMeshLength(){
     let unit = document.getElementById('unitSelect').value;
     document.getElementById('fMeshSides').value = 0;
@@ -125,7 +125,11 @@ function updateMeshLength(){
         sumOfLengthOfWallsIn >= threshold ||
         totalLength >= threshold
     ) {
+        wallLength = true;
         document.getElementById('fMeshSides').value = 2;
+    }
+    else{
+        wallLength = false;
     }
 }
 
@@ -1184,6 +1188,8 @@ function paintMaterialCalculation(inputData, calculationData) {
     let unitSelectThickSlb = document.getElementById('unitSelectThickSlb').value;
     let slabThickness = document.getElementById('slabThickness').value;
 
+
+
     if ((externalWallThickness < 100 || externalWallThickness > 310)  && unitSelectThickEx == 'mm') {
         document.getElementById('errorBoxExternalWall').innerText = 'Wall Thickness Cannot be smaller than 100mm or greater than 310mm';
         return;
@@ -1272,9 +1278,11 @@ function paintMaterialCalculation(inputData, calculationData) {
     // F-MESH
     if (calculationData.fMesh.totalLength > 0 || calculationData.fMesh.nosOpening > 0) {
         explanation += `<h4><b>F-MESH</b></h4>`;
+        if(wallLength){
         explanation += `Wall Length for Joints = ${calculationData.fMesh.totalLength.toFixed(2)} ${unit}<br>`;
         explanation += `Total Length for Joints = ${calculationData.fMesh.totalLength.toFixed(2)} ${unit}<br>`;
         explanation += `Pieces Required (Joints) = ${calculationData.fMesh.totalLength.toFixed(2)} ÷ ${inputData.fMesh.length} = ${calculationData.fMesh.nosJoints.toFixed(2)} nos<br>`;
+        }
         explanation += `Pieces Required (Openings) = ${calculationData.openingScheduleExternalWall.totalFMesh} + ${calculationData.openingScheduleInternalWall.totalFMesh} = ${calculationData.fMesh.nosOpening.toFixed(2)} nos<br>`;
         explanation += `<hr>`;
     }
@@ -1311,10 +1319,10 @@ function paintMaterialCalculation(inputData, calculationData) {
     if (calculationData.uMesh.internalWall > 0) {
         explanation += `U-MESH (Internal Wall (${internalWallThickness} ${unitSelectThickIn})): ${calculationData.uMesh.internalWall.toFixed(2)} nos<br>`;
     }
-    if (calculationData.fMesh.nosOpening > 0) {
+    if (calculationData.fMesh.nosOpening > 0 ) {
         explanation += `F-MESH (Openings): ${calculationData.fMesh.nosOpening.toFixed(2)} nos<br>`;
     }
-     if (calculationData.fMesh.nosJoints > 0) {
+     if (calculationData.fMesh.nosJoints > 0 && wallLength) {
         explanation += `F-MESH (Joints): ${calculationData.fMesh.nosJoints.toFixed(2)} nos<br>`;
     }
     
