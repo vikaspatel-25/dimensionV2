@@ -896,8 +896,29 @@ function calculate(data) {
     let wallsEx = {
         areaOfWalls: areaOfWallsEx,
         sumOfAreaOfWalls: sumOfAreaOfWallsEx,
-        sumOfLengthOfWalls: sumOfLengthOfWallsEx
+        sumOfLengthOfWalls: sumOfLengthOfWallsEx,
+        meshRequiredExWall:0
     };
+
+    let heightOfExWall = data.externalWallData.wallData[0].height;
+    let unit = document.getElementById('unitSelect').value;
+
+
+    if ((unit === 'Feet' && heightOfExWall > 10) || (unit === 'Meter' && heightOfExWall > 3)) {
+       
+        let meshRequiredExWall;
+    
+        if (unit === 'Feet') {
+            meshRequiredExWall = Math.ceil((wallsEx.sumOfLengthOfWalls / 4) * 2);
+        }
+        if (unit === 'Meter') {
+            meshRequiredExWall = Math.ceil((wallsEx.sumOfLengthOfWalls / 1.2) * 2);
+        }
+
+        wallsEx.meshRequiredExWall = meshRequiredExWall;
+    }
+    
+
 
     let areaOfGatesEx = [];
     let fMeshGatesEx = [];
@@ -992,8 +1013,27 @@ function calculate(data) {
     let wallsInt = {
         areaOfWalls: areaOfWallsInt,
         sumOfAreaOfWalls: sumOfAreaOfWallsInt,
-        sumOfLengthOfWalls: sumOfLengthOfWallsInt
+        sumOfLengthOfWalls: sumOfLengthOfWallsInt,
+        meshRequiredIntWall:0
     };
+
+
+    let heightOfIntWall = data.internalWallData.wallData[0].height;
+
+    if ((unit === 'Feet' && heightOfIntWall > 10) || (unit === 'Meter' && heightOfIntWall > 3)) {
+       
+        let meshRequiredIntWall;
+    
+        if (unit === 'Feet') {
+            meshRequiredIntWall = Math.ceil((wallsInt.sumOfLengthOfWalls / 4) * 2);
+        }
+        if (unit === 'Meter') {
+            meshRequiredIntWall = Math.ceil((wallsInt.sumOfLengthOfWalls / 1.2) * 2);
+        }
+
+        wallsInt.meshRequiredIntWall = meshRequiredIntWall;
+
+    }
 
     let areaOfGatesInt = [];
     let fMeshGatesInt = [];
@@ -1094,7 +1134,7 @@ function calculate(data) {
         nosOfPanels: nosOfPanelsEx
     }
 
-    // calculation for Ground Floor Slab
+    // calculation for Ground Floor Slab 
 
     let slabArea = data.groundFloorSlab.slabArea || 0;
     let deduction = data.groundFloorSlab.deduction || 0;
@@ -1121,6 +1161,8 @@ function calculate(data) {
     let totalLengthLMesh = totalLengthCorners + totalLengthExternalWall + totalLengthInternalWall;
     let nosOfLMesh = totalLengthLMesh / (data.lMesh.length || 1);
 
+    
+
     let lMesh = {
         totalLengthCorners: totalLengthCorners,
         totalLengthExternalWall: totalLengthExternalWall,
@@ -1142,7 +1184,7 @@ function calculate(data) {
         nosOpening: openingScheduleExternalWall.totalFMesh + openingScheduleInternalWall.totalFMesh
     }
 
-    // calculation for u mesh 
+    // calculation for u mesh   
 
     let uMesh = {
         externalWall: openingScheduleExternalWall.totalUMesh / data.fMesh.length,
@@ -1235,6 +1277,7 @@ function paintMaterialCalculation(inputData, calculationData) {
         explanation += `Openings (Gates/Windows/Vents) = ${calculationData.openingScheduleExternalWall.totalArea.toFixed(2)} sq.${unit}<br>`;
         explanation += `Net Area After Deductions = ${calculationData.mainWallEx.totalArea.toFixed(2)} sq.${unit}<br>`;
         explanation += `Panels Required = ${calculationData.mainWallEx.totalArea.toFixed(2)} ÷ ${inputData.externalWallData.panelArea} = ${calculationData.mainWallEx.nosOfPanels.toFixed(2)} nos<br>`;
+        explanation += `Mesh Required = ${calculationData.wallsEx.meshRequiredExWall.toFixed(2)} nos<br>`;
         explanation += `<hr>`;
     }
 
@@ -1249,6 +1292,7 @@ function paintMaterialCalculation(inputData, calculationData) {
         explanation += `Openings (Gates/Windows/Vents) = ${calculationData.openingScheduleInternalWall.totalArea.toFixed(2)} sq.${unit}<br>`;
         explanation += `Net Area After Deductions = ${calculationData.mainWallInt.totalArea.toFixed(2)} sq.${unit}<br>`;
         explanation += `Panels Required = ${calculationData.mainWallInt.totalArea.toFixed(2)} ÷ ${inputData.internalWallData.panelArea} = ${calculationData.mainWallInt.nosOfPanels.toFixed(2)} nos<br>`;
+        explanation += `Mesh Required = ${calculationData.wallsInt.meshRequiredIntWall.toFixed(2)} nos<br>`;
         explanation += `<hr>`;
     }
 
@@ -1306,6 +1350,7 @@ function paintMaterialCalculation(inputData, calculationData) {
     }
     if (calculationData.mainWallInt.nosOfPanels > 0) {
         explanation += `Internal Wall Panels: ${calculationData.mainWallInt.nosOfPanels.toFixed(2)} nos<br>`;
+        
     }
     if (calculationData.groundFloorSlab.nosOfPanels > 0) {
         explanation += `Ground Floor Slab (${slabThickness} ${unitSelectThickSlb}): ${calculationData.groundFloorSlab.nosOfPanels.toFixed(2)} nos<br>`;
