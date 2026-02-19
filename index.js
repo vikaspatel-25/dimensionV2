@@ -877,7 +877,13 @@ function collectDataGf() {
     };
 
     calculate(Data);
+ 
+    const solution = document.getElementById("solutionContainer");
 
+    solution.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
 }
 
 
@@ -897,17 +903,16 @@ function calculate(data) {
         areaOfWalls: areaOfWallsEx,
         sumOfAreaOfWalls: sumOfAreaOfWallsEx,
         sumOfLengthOfWalls: sumOfLengthOfWallsEx,
-        meshRequiredExWall:0
+        meshRequiredExWall: 0
     };
 
     let heightOfExWall = data.externalWallData.wallData[0].height;
     let unit = document.getElementById('unitSelect').value;
 
-
     if ((unit === 'Feet' && heightOfExWall > 10) || (unit === 'Meter' && heightOfExWall > 3)) {
-       
+
         let meshRequiredExWall;
-    
+
         if (unit === 'Feet') {
             meshRequiredExWall = Math.ceil((wallsEx.sumOfLengthOfWalls / 4) * 2);
         }
@@ -917,8 +922,6 @@ function calculate(data) {
 
         wallsEx.meshRequiredExWall = meshRequiredExWall;
     }
-    
-
 
     let areaOfGatesEx = [];
     let fMeshGatesEx = [];
@@ -998,7 +1001,6 @@ function calculate(data) {
         totalFMesh: sumOfFMeshGatesEx + sumOfFMeshWinEx + sumOfFMeshVentEx
     };
 
-
     // calculation for internal wall
 
     let areaOfWallsInt = [];
@@ -1014,16 +1016,15 @@ function calculate(data) {
         areaOfWalls: areaOfWallsInt,
         sumOfAreaOfWalls: sumOfAreaOfWallsInt,
         sumOfLengthOfWalls: sumOfLengthOfWallsInt,
-        meshRequiredIntWall:0
+        meshRequiredIntWall: 0
     };
-
 
     let heightOfIntWall = data.internalWallData.wallData[0].height;
 
     if ((unit === 'Feet' && heightOfIntWall > 10) || (unit === 'Meter' && heightOfIntWall > 3)) {
-       
+
         let meshRequiredIntWall;
-    
+
         if (unit === 'Feet') {
             meshRequiredIntWall = Math.ceil((wallsInt.sumOfLengthOfWalls / 4) * 2);
         }
@@ -1032,7 +1033,6 @@ function calculate(data) {
         }
 
         wallsInt.meshRequiredIntWall = meshRequiredIntWall;
-
     }
 
     let areaOfGatesInt = [];
@@ -1113,12 +1113,11 @@ function calculate(data) {
         totalFMesh: sumOfFMeshGatesInt + sumOfFMeshWinInt + sumOfFMeshVentInt
     };
 
-
     //calculation for Main walls 
 
     let totalAreaAfterDeductionInt = wallsInt.sumOfAreaOfWalls - openingScheduleInternalWall.totalArea;
     let panelAreaInt = data.internalWallData.panelArea || 1;
-    let nosOfPanelsInt = totalAreaAfterDeductionInt / panelAreaInt;
+    let nosOfPanelsInt = Math.ceil(totalAreaAfterDeductionInt / panelAreaInt);
 
     let mainWallInt = {
         totalArea: totalAreaAfterDeductionInt,
@@ -1127,7 +1126,7 @@ function calculate(data) {
 
     let totalAreaAfterDeductionEx = wallsEx.sumOfAreaOfWalls - openingScheduleExternalWall.totalArea;
     let panelAreaEx = data.externalWallData.panelArea || 1;
-    let nosOfPanelsEx = totalAreaAfterDeductionEx / panelAreaEx;
+    let nosOfPanelsEx = Math.ceil(totalAreaAfterDeductionEx / panelAreaEx);
 
     let mainWallEx = {
         totalArea: totalAreaAfterDeductionEx,
@@ -1141,7 +1140,7 @@ function calculate(data) {
     let panelArea = data.groundFloorSlab.panelArea || 1;
 
     let totalArea = slabArea - deduction;
-    let nosOfPanels = totalArea / panelArea;
+    let nosOfPanels = Math.ceil(totalArea / panelArea);
 
     let groundFloorSlab = {
         slabArea: slabArea,
@@ -1151,7 +1150,6 @@ function calculate(data) {
         nosOfPanels: nosOfPanels
     };
 
-
     // calculation for lMesh
 
     let wallHeight = data.externalWallData.wallData[0]?.height || 0;
@@ -1159,9 +1157,7 @@ function calculate(data) {
     let totalLengthExternalWall = wallsEx.sumOfLengthOfWalls * data.lMesh.externalWall;
     let totalLengthInternalWall = wallsInt.sumOfLengthOfWalls * data.lMesh.internalWall;
     let totalLengthLMesh = totalLengthCorners + totalLengthExternalWall + totalLengthInternalWall;
-    let nosOfLMesh = totalLengthLMesh / (data.lMesh.length || 1);
-
-    
+    let nosOfLMesh = Math.ceil(totalLengthLMesh / (data.lMesh.length || 1));
 
     let lMesh = {
         totalLengthCorners: totalLengthCorners,
@@ -1175,7 +1171,7 @@ function calculate(data) {
 
     let length = wallsEx.sumOfLengthOfWalls + wallsInt.sumOfLengthOfWalls;
     let totalLength = length * data.fMesh.nos
-    let nosOfFMesh = totalLength / (data.fMesh.length || 1);
+    let nosOfFMesh = Math.ceil(totalLength / (data.fMesh.length || 1));
 
     let fMesh = {
         length: length,
@@ -1187,8 +1183,8 @@ function calculate(data) {
     // calculation for u mesh   
 
     let uMesh = {
-        externalWall: openingScheduleExternalWall.totalUMesh / data.fMesh.length,
-        internalWall: openingScheduleInternalWall.totalUMesh /data.fMesh.length
+        externalWall: Math.ceil(openingScheduleExternalWall.totalUMesh / data.fMesh.length),
+        internalWall: Math.ceil(openingScheduleInternalWall.totalUMesh / data.fMesh.length)
     }
 
     calculationData = {
@@ -1210,11 +1206,10 @@ function calculate(data) {
         uMesh
     };
 
-
-
     paintMaterialCalculation(data, calculationData);
 
 }
+
 
 
             
@@ -1229,8 +1224,6 @@ function paintMaterialCalculation(inputData, calculationData) {
     let unitSelectThickEx = document.getElementById('unitSelectThickEx').value;
     let unitSelectThickSlb = document.getElementById('unitSelectThickSlb').value;
     let slabThickness = document.getElementById('slabThickness').value;
-
-
 
     if ((externalWallThickness < 100 || externalWallThickness > 310)  && unitSelectThickEx == 'mm') {
         document.getElementById('errorBoxExternalWall').innerText = 'Wall Thickness Cannot be smaller than 100mm or greater than 310mm';
@@ -1264,6 +1257,13 @@ function paintMaterialCalculation(inputData, calculationData) {
         document.getElementById('errorBoxOtherData').innerText = '';
     }
 
+    let heightOfExWall = inputData.externalWallData.wallData[0]?.height || 0;
+    let heightOfIntWall = inputData.internalWallData.wallData[0]?.height || 0;
+
+    let heightConditionEx = (unit === 'Feet' && heightOfExWall > 10) || (unit === 'Meter' && heightOfExWall > 3);
+    let heightConditionInt = (unit === 'Feet' && heightOfIntWall > 10) || (unit === 'Meter' && heightOfIntWall > 3);
+    let heightConditionEither = heightConditionEx || heightConditionInt;
+
     let explanation = `<h3><b>Material Calculation Report</b></h3>`;
 
     // EXTERNAL WALLS
@@ -1277,7 +1277,10 @@ function paintMaterialCalculation(inputData, calculationData) {
         explanation += `Openings (Gates/Windows/Vents) = ${calculationData.openingScheduleExternalWall.totalArea.toFixed(2)} sq.${unit}<br>`;
         explanation += `Net Area After Deductions = ${calculationData.mainWallEx.totalArea.toFixed(2)} sq.${unit}<br>`;
         explanation += `Panels Required = ${calculationData.mainWallEx.totalArea.toFixed(2)} ÷ ${inputData.externalWallData.panelArea} = ${calculationData.mainWallEx.nosOfPanels.toFixed(2)} nos<br>`;
-        explanation += `Mesh Required = ${calculationData.wallsEx.meshRequiredExWall.toFixed(2)} nos<br>`;
+
+        if (heightConditionEx) {
+            explanation += `Mesh Required = ${calculationData.wallsEx.meshRequiredExWall.toFixed(2)} nos<br>`;
+        }
         explanation += `<hr>`;
     }
 
@@ -1292,7 +1295,10 @@ function paintMaterialCalculation(inputData, calculationData) {
         explanation += `Openings (Gates/Windows/Vents) = ${calculationData.openingScheduleInternalWall.totalArea.toFixed(2)} sq.${unit}<br>`;
         explanation += `Net Area After Deductions = ${calculationData.mainWallInt.totalArea.toFixed(2)} sq.${unit}<br>`;
         explanation += `Panels Required = ${calculationData.mainWallInt.totalArea.toFixed(2)} ÷ ${inputData.internalWallData.panelArea} = ${calculationData.mainWallInt.nosOfPanels.toFixed(2)} nos<br>`;
-        explanation += `Mesh Required = ${calculationData.wallsInt.meshRequiredIntWall.toFixed(2)} nos<br>`;
+
+        if (heightConditionInt) {
+            explanation += `Mesh Required = ${calculationData.wallsInt.meshRequiredIntWall.toFixed(2)} nos<br>`;
+        }
         explanation += `<hr>`;
     }
 
@@ -1322,35 +1328,23 @@ function paintMaterialCalculation(inputData, calculationData) {
     // F-MESH
     if (calculationData.fMesh.totalLength > 0 || calculationData.fMesh.nosOpening > 0) {
         explanation += `<h4><b>F-MESH</b></h4>`;
-        if(wallLength){
-        explanation += `Wall Length for Joints = ${calculationData.fMesh.totalLength.toFixed(2)} ${unit}<br>`;
-        explanation += `Total Length for Joints = ${calculationData.fMesh.totalLength.toFixed(2)} ${unit}<br>`;
-        explanation += `Pieces Required (Joints) = ${calculationData.fMesh.totalLength.toFixed(2)} ÷ ${inputData.fMesh.length} = ${calculationData.fMesh.nosJoints.toFixed(2)} nos<br>`;
+
+        if (heightConditionEither) {
+            explanation += `Pieces Required (Joints) = ${calculationData.fMesh.totalLength.toFixed(2)} ÷ ${inputData.fMesh.length} = ${calculationData.fMesh.nosJoints.toFixed(2)} nos<br>`;
         }
+
         explanation += `Pieces Required (Openings) = ${calculationData.openingScheduleExternalWall.totalFMesh} + ${calculationData.openingScheduleInternalWall.totalFMesh} = ${calculationData.fMesh.nosOpening.toFixed(2)} nos<br>`;
         explanation += `<hr>`;
     }
 
-    // U-MESH
-    // if (calculationData.openingScheduleExternalWall.totalUMesh > 0 || calculationData.openingScheduleInternalWall.totalUMesh > 0) {
-    //     explanation += `<h4><b>U-MESH</b></h4>`;
-    //     if (calculationData.openingScheduleExternalWall.totalUMesh > 0) {
-    //         explanation += `Total Length for U-MESH (External Wall) = ${calculationData.openingScheduleExternalWall.totalUMesh.toFixed(2)} ${unit}<br>`;
-    //     }
-    //     if (calculationData.openingScheduleInternalWall.totalUMesh > 0) {
-    //         explanation += `Total Length for U-MESH (Internal Wall) = ${calculationData.openingScheduleInternalWall.totalUMesh.toFixed(2)} ${unit}<br>`;
-    //     }
-    //     explanation += `<hr>`;
-    // }
-
     // FINAL SUMMARY
     explanation += `<h3><b>Final Material Requirement Summary</b></h3>`;
+
     if (calculationData.mainWallEx.nosOfPanels > 0) {
         explanation += `External Wall Panels: ${calculationData.mainWallEx.nosOfPanels.toFixed(2)} nos<br>`;
     }
     if (calculationData.mainWallInt.nosOfPanels > 0) {
         explanation += `Internal Wall Panels: ${calculationData.mainWallInt.nosOfPanels.toFixed(2)} nos<br>`;
-        
     }
     if (calculationData.groundFloorSlab.nosOfPanels > 0) {
         explanation += `Ground Floor Slab (${slabThickness} ${unitSelectThickSlb}): ${calculationData.groundFloorSlab.nosOfPanels.toFixed(2)} nos<br>`;
@@ -1364,17 +1358,22 @@ function paintMaterialCalculation(inputData, calculationData) {
     if (calculationData.uMesh.internalWall > 0) {
         explanation += `U-MESH (Internal Wall (${internalWallThickness} ${unitSelectThickIn})): ${calculationData.uMesh.internalWall.toFixed(2)} nos<br>`;
     }
-    if (calculationData.fMesh.nosOpening > 0 ) {
+    if (calculationData.fMesh.nosOpening > 0 && heightConditionEither) {
         explanation += `F-MESH (Openings): ${calculationData.fMesh.nosOpening.toFixed(2)} nos<br>`;
     }
-     if (calculationData.fMesh.nosJoints > 0 && wallLength) {
+    if (calculationData.fMesh.nosJoints > 0 && heightConditionEither) {
         explanation += `F-MESH (Joints): ${calculationData.fMesh.nosJoints.toFixed(2)} nos<br>`;
     }
-    
+
+    if (heightConditionEx || heightConditionInt) {
+        let totalFMeshRequired = (calculationData.wallsEx.meshRequiredExWall || 0) + (calculationData.wallsInt.meshRequiredIntWall || 0);
+        if (totalFMeshRequired > 0) {
+            explanation += `Total F-MESH Required (External + Internal): ${totalFMeshRequired.toFixed(2)} nos<br>`;
+        }
+    }
 
     snippetArea.innerHTML = explanation;
 
-    // Enable download and contact elements
     let downloadButton = document.getElementById('downloadButton');
     downloadButton.disabled = false;
     downloadButton.classList.remove('disabled');
@@ -1382,6 +1381,8 @@ function paintMaterialCalculation(inputData, calculationData) {
     document.getElementById('mailId').classList.remove('disabled');
     document.getElementById('companyAddress').classList.remove('disabled');
 }
+
+
 
 
 function downloadPdf() {
@@ -1498,7 +1499,6 @@ function reset(){
 
      snippetArea.innerHTML = explanation;
 
-    // Enable download and contact elements
     let downloadButton = document.getElementById('downloadButton');
     downloadButton.disabled = true;
     downloadButton.classList.add('disabled');
@@ -1506,6 +1506,17 @@ function reset(){
     document.getElementById('mailId').classList.add('disabled');
     document.getElementById('companyAddress').classList.add('disabled');
   })
+
+  const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(cb => {
+        cb.checked = false;
+    });
+
+
+    document.querySelectorAll('.disabled').forEach(el => {
+        el.classList.remove('disabled');
+        el.disabled = false;
+    });
 }
 
 
