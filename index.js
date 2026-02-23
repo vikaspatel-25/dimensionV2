@@ -1264,7 +1264,7 @@ function paintMaterialCalculation(inputData, calculationData) {
     let heightConditionInt = (unit === 'Feet' && heightOfIntWall > 10) || (unit === 'Meter' && heightOfIntWall > 3);
     let heightConditionEither = heightConditionEx || heightConditionInt;
 
-    let explanation = `<h3><b>Material Calculation Report</b></h3>`;
+    explanation = `<h3><b>Material Calculation Report</b></h3>`;
 
     // EXTERNAL WALLS
     if (calculationData.mainWallEx.totalArea > 0) {
