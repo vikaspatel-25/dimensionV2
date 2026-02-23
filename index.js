@@ -141,10 +141,10 @@ let lMeshExternalWall = document.querySelectorAll('.lMeshExternalWall input');
 let lMeshInternalWall = document.querySelectorAll('.lMeshInternalWall input');
 
 if (e.checked) {
-    lMeshExternalWall.forEach(input => { input.disabled = false;
+    lMeshExternalWall.forEach(input => { 
             input.value = 1.50;
     });
-    lMeshInternalWall.forEach(input => {input.disabled = false;
+    lMeshInternalWall.forEach(input => {
             input.value = 2;
     });
 } else {
@@ -1210,9 +1210,7 @@ function calculate(data) {
 
 }
 
-
-
-            
+           
 let explanation = ``;
 
 function paintMaterialCalculation(inputData, calculationData) {
@@ -1382,16 +1380,14 @@ function paintMaterialCalculation(inputData, calculationData) {
     downloadButton.classList.remove('disabled');
     document.getElementById('contactNo').classList.remove('disabled');
     document.getElementById('mailId').classList.remove('disabled');
-    document.getElementById('companyAddress').classList.remove('disabled');
+    document.getElementById('companyName').classList.remove('disabled');
 }
-
-
 
 function downloadPdf() {
 
     const contactNo = document.getElementById('contactNo').value.trim();
     const mailId = document.getElementById('mailId').value.trim();
-    const companyAddress = document.getElementById('companyAddress').value.trim();
+    const companyName = document.getElementById('companyName').value.trim();
     const errorBox = document.getElementById('error-box-input-data');
 
     function validateInputs() {
@@ -1402,8 +1398,8 @@ function downloadPdf() {
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mailId)) {
             errorBox.innerText = 'Please enter a valid email address.';
             isValid = false;
-        } else if (companyAddress.length === 0) {
-            errorBox.innerText = 'Company address cannot be empty.';
+        } else if (companyName.length === 0) {
+            errorBox.innerText = 'Company Name cannot be empty.';
             isValid = false;
         } else {
             errorBox.innerText = '';
@@ -1427,7 +1423,7 @@ function downloadPdf() {
     y += 7;
     doc.text(`Email: ${mailId}`, pageCenter, y, { align: 'center' });
     y += 7;
-    doc.text(`Address: ${companyAddress}`, pageCenter, y, { align: 'center' });
+    doc.text(`Name: ${companyName}`, pageCenter, y, { align: 'center' });
     y += 15;
 
     const pdfText = explanation
@@ -1487,38 +1483,11 @@ function downloadPdf() {
         }
     });
 
-    doc.save('Material-Calculation-Report.pdf');
+    doc.save(`${companyName}.pdf`);
 }
 
 function reset(){
-  let allInputs = document.getElementsByClassName('input-box');
-  Array.from(allInputs).forEach((e)=>{
-    if(e.disabled == false){
-        e.value = '';
-        explanation = ``;
-    }
-    const snippetArea = document.getElementById('solutionTextAreaGroundFloor');
-
-     snippetArea.innerHTML = explanation;
-
-    let downloadButton = document.getElementById('downloadButton');
-    downloadButton.disabled = true;
-    downloadButton.classList.add('disabled');
-    document.getElementById('contactNo').classList.add('disabled');
-    document.getElementById('mailId').classList.add('disabled');
-    document.getElementById('companyAddress').classList.add('disabled');
-  })
-
-  const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach(cb => {
-        cb.checked = false;
-    });
-
-
-    document.querySelectorAll('.disabled').forEach(el => {
-        el.classList.remove('disabled');
-        el.disabled = false;
-    });
+  window.location.reload();
 }
 
 
