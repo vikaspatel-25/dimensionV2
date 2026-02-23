@@ -1312,7 +1312,7 @@ function paintMaterialCalculation(inputData, calculationData) {
         explanation += `<hr>`;
     }
 
-    // L-MESH
+    // L-MESH (unchanged)
     if (calculationData.lMesh.totalLengthLMesh > 0) {
         explanation += `<h4><b>L-MESH</b></h4>`;
         explanation += `Corners: ${calculationData.lMesh.totalLengthCorners.toFixed(2)} ${unit}<br>`;
@@ -1325,7 +1325,7 @@ function paintMaterialCalculation(inputData, calculationData) {
         explanation += `<hr>`;
     }
 
-    // F-MESH
+    // F-MESH (unchanged)
     if (calculationData.fMesh.totalLength > 0 || calculationData.fMesh.nosOpening > 0) {
         explanation += `<h4><b>F-MESH</b></h4>`;
 
@@ -1338,6 +1338,7 @@ function paintMaterialCalculation(inputData, calculationData) {
     }
 
     // FINAL SUMMARY
+
     explanation += `<h3><b>Final Material Requirement Summary</b></h3>`;
 
     if (calculationData.mainWallEx.nosOfPanels > 0) {
@@ -1358,18 +1359,20 @@ function paintMaterialCalculation(inputData, calculationData) {
     if (calculationData.uMesh.internalWall > 0) {
         explanation += `U-MESH (Internal Wall (${internalWallThickness} ${unitSelectThickIn})): ${calculationData.uMesh.internalWall.toFixed(2)} nos<br>`;
     }
-    if (calculationData.fMesh.nosOpening > 0 && heightConditionEither) {
+
+    if (calculationData.fMesh.nosOpening > 0) {
         explanation += `F-MESH (Openings): ${calculationData.fMesh.nosOpening.toFixed(2)} nos<br>`;
     }
-    if (calculationData.fMesh.nosJoints > 0 && heightConditionEither) {
+
+    if (heightConditionEither && calculationData.fMesh.nosJoints > 0) {
         explanation += `F-MESH (Joints): ${calculationData.fMesh.nosJoints.toFixed(2)} nos<br>`;
     }
 
-    if (heightConditionEx || heightConditionInt) {
-        let totalFMeshRequired = (calculationData.wallsEx.meshRequiredExWall || 0) + (calculationData.wallsInt.meshRequiredIntWall || 0);
-        if (totalFMeshRequired > 0) {
-            explanation += `Total F-MESH Required (External + Internal): ${totalFMeshRequired.toFixed(2)} nos<br>`;
-        }
+    if (calculationData.wallsEx.meshRequiredExWall > 0 || calculationData.wallsInt.meshRequiredIntWall > 0) {
+        explanation += `Total F-MESH Required (External + Internal): ${
+            calculationData.wallsEx.meshRequiredExWall +
+            calculationData.wallsInt.meshRequiredIntWall
+        } nos<br>`;
     }
 
     snippetArea.innerHTML = explanation;
@@ -1381,7 +1384,6 @@ function paintMaterialCalculation(inputData, calculationData) {
     document.getElementById('mailId').classList.remove('disabled');
     document.getElementById('companyAddress').classList.remove('disabled');
 }
-
 
 
 
