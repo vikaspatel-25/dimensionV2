@@ -1442,10 +1442,10 @@ function downloadPdf() {
         if (trimmedLine.length === 0) return;
 
 
-        if (trimmedLine.startsWith('---H3---Final Material Requirement Summary')) {
-        doc.addPage();
-        y = 20;
-      }
+    //     if (trimmedLine.startsWith('---H3---Final Material Requirement Summary')) {
+    //     doc.addPage();
+    //     y = 20;
+    //   }
 
 
         if (y > 280) { 
